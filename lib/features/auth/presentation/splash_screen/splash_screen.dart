@@ -1,3 +1,4 @@
+import 'package:boole_apps/app/app_router.dart';
 import 'package:boole_apps/features/auth/presentation/splash_screen/components/splash_content.dart';
 import 'package:flutter/material.dart';
 
@@ -87,7 +88,7 @@ class _SplashScreenState extends State<SplashScreen> {
                       ElevatedButton(
                         onPressed: () {
                           // todo-sign-in-route
-                          // Navigator.pushNamed(context, /* signin route */ );
+                          Navigator.pushNamed(context, AppRouter.login);
                         },
                         child: ConstrainedBox(
                           constraints: BoxConstraints(
