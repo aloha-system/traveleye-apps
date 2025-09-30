@@ -13,4 +13,23 @@ class AuthRepositoryImp implements AuthRepository {
 
     return UserEntity(uid: user.uid, email: user.email ?? '');
   }
+
+  @override
+  Future<UserEntity> createAccount({
+    required String email,
+    required String password,
+    required String name,
+  }) async {
+    final user = await remoteDatasource.createAccount(
+      email: email,
+      password: password,
+      name: name,
+    );
+
+    return UserEntity(
+      uid: user.uid,
+      email: user.email ?? '',
+      displayName: user.displayName,
+    );
+  }
 }
