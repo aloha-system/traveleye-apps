@@ -1,21 +1,21 @@
+import 'package:boole_apps/core/utils/keyboard_utils.dart';
 import 'package:boole_apps/core/widgets/custom_suffix_icon.dart';
 import 'package:boole_apps/features/auth/presentation/constants/form_error.dart';
-import 'package:boole_apps/features/auth/presentation/login_screen/components/form_error.dart';
+import 'package:boole_apps/features/auth/presentation/screens/login_screen/components/form_error.dart';
 import 'package:flutter/material.dart';
 
-class RegisterForm extends StatefulWidget {
-  const RegisterForm({super.key});
+class LoginForm extends StatefulWidget {
+  const LoginForm({super.key});
 
   @override
-  State<RegisterForm> createState() => _RegisterFormState();
+  SignFormState createState() => SignFormState();
 }
 
-class _RegisterFormState extends State<RegisterForm> {
+class SignFormState extends State<LoginForm> {
   final _formKey = GlobalKey<FormState>();
   String? email;
   String? password;
-  String? confirmPassword;
-  bool remember = false;
+  bool? remember = false;
   final List<String?> errors = [];
 
   void addError({String? error}) {
@@ -65,11 +65,15 @@ class _RegisterFormState extends State<RegisterForm> {
               }
               return null;
             },
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
               labelText: "Email",
               hintText: "Enter your email",
               floatingLabelBehavior: FloatingLabelBehavior.always,
               suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Mail.svg"),
+              hintStyle: Theme.of(context).textTheme.bodyLarge,
+              labelStyle: Theme.of(
+                context,
+              ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
             ),
           ),
           const SizedBox(height: 20),
@@ -82,7 +86,7 @@ class _RegisterFormState extends State<RegisterForm> {
               } else if (value.length >= 8) {
                 removeError(error: FormErrorConstants.kShortPassError);
               }
-              password = value;
+              return;
             },
             validator: (value) {
               if (value!.isEmpty) {
@@ -105,49 +109,41 @@ class _RegisterFormState extends State<RegisterForm> {
               ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
             ),
           ),
-
           const SizedBox(height: 20),
-          TextFormField(
-            obscureText: true,
-            onSaved: (newValue) => confirmPassword = newValue,
-            onChanged: (value) {
-              if (value.isNotEmpty) {
-                removeError(error: FormErrorConstants.kPassNullError);
-              } else if (value.isNotEmpty && password == confirmPassword) {
-                removeError(error: FormErrorConstants.kMatchPassError);
-              }
-              confirmPassword = value;
-            },
-            validator: (value) {
-              if (value!.isEmpty) {
-                addError(error: FormErrorConstants.kPassNullError);
-                return "";
-              } else if ((password != value)) {
-                addError(error: FormErrorConstants.kMatchPassError);
-                return "";
-              }
-              return null;
-            },
-            decoration: InputDecoration(
-              labelText: "Confirm Password",
-              hintText: "Re-enter your password",
-              floatingLabelBehavior: FloatingLabelBehavior.always,
-              suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Lock.svg"),
-              hintStyle: Theme.of(context).textTheme.bodyLarge,
-              labelStyle: Theme.of(
-                context,
-              ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
-            ),
+          Row(
+            children: [
+              Checkbox(
+                value: remember,
+                activeColor: Theme.of(context).colorScheme.primary,
+                onChanged: (value) {
+                  setState(() {
+                    remember = value;
+                  });
+                },
+              ),
+              const Text("Remember me"),
+              const Spacer(),
+              GestureDetector(
+                // onTap: () => Navigator.pushNamed(
+                //   context,
+                //   ForgotPasswordScreen.routeName,
+                // ),
+                child: const Text(
+                  "Forgot Password",
+                  style: TextStyle(decoration: TextDecoration.underline),
+                ),
+              ),
+            ],
           ),
-
           FormError(errors: errors),
-          const SizedBox(height: 20),
+          const SizedBox(height: 16),
           ElevatedButton(
             onPressed: () {
               if (_formKey.currentState!.validate()) {
                 _formKey.currentState!.save();
                 // if all are valid then go to success screen
-                // Navigator.pushNamed(context, CompleteProfileScreen.routeName);
+                KeyboardUtil.hideKeyboard(context);
+                // Navigator.pushNamed(context, LoginSuccessScreen.routeName);
               }
             },
             child: const Text("Continue"),
