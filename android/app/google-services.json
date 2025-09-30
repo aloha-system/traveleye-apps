@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "194609134015",
+    "project_id": "boole-mobile-application",
+    "storage_bucket": "boole-mobile-application.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:194609134015:android:184f7ba0b61cb2fe5f890a",
+        "android_client_info": {
+          "package_name": "com.example.boole_apps"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDkg_JJUyFu2h-O2zH_bhYh0WQkTz4eyZY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
