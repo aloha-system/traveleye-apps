@@ -37,4 +37,9 @@ class AuthRepositoryImp implements AuthRepository {
   Future<void> signOut() async {
     await remoteDatasource.signOut();
   }
+
+  @override
+  Future<void> resetPassword(String email) async {
+    await remoteDatasource.resetPassword(email);
+  }
 }

@@ -46,6 +46,18 @@ class AuthRemoteDatasource {
     await firebaseAuth.signOut();
   }
 
+  // firebase authentication reset password
+  Future<void> resetPassword(String email) async {
+    try {
+      await firebaseAuth.sendPasswordResetEmail(email: email);
+    } on FirebaseAuthException catch (e) {
+      throw Exception('Failed to reset your password. ${e.code}');
+    } on Exception catch (e) {
+      throw Exception('Unexpected error. $e');
+    }
+  }
+
+  // firebase error map for firebase authentication sign in
   _mapFirebaseError(FirebaseAuthException e) {
     switch (e.code) {
       case 'user-not-found':
