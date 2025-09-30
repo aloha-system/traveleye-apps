@@ -41,6 +41,11 @@ class AuthRemoteDatasource {
     }
   }
 
+  // firebase authentication sign out
+  Future<void> signOut() async {
+    await firebaseAuth.signOut();
+  }
+
   _mapFirebaseError(FirebaseAuthException e) {
     switch (e.code) {
       case 'user-not-found':
