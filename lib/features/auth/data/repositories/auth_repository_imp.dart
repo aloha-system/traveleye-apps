@@ -32,4 +32,9 @@ class AuthRepositoryImp implements AuthRepository {
       displayName: user.displayName,
     );
   }
+
+  @override
+  Future<void> signOut() async {
+    await remoteDatasource.signOut();
+  }
 }
