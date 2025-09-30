@@ -1,5 +1,5 @@
 import 'package:boole_apps/app/main_screen.dart';
-import 'package:boole_apps/app/splash_screen.dart';
+import 'package:boole_apps/features/auth/presentation/splash_screen/splash_screen.dart';
 import 'package:flutter/material.dart';
 
 class AppRouter {
