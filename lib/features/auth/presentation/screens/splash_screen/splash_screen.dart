@@ -1,5 +1,5 @@
 import 'package:boole_apps/app/app_router.dart';
-import 'package:boole_apps/features/auth/presentation/splash_screen/components/splash_content.dart';
+import 'package:boole_apps/features/auth/presentation/screens/splash_screen/components/splash_content.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatefulWidget {
