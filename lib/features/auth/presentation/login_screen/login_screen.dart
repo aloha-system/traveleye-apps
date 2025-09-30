@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 import 'package:boole_apps/app/app_router.dart';
+=======
+>>>>>>> d2a996685b1f2b164e0dad2151916805a96e5a13
 import 'package:boole_apps/features/auth/presentation/login_screen/components/login_form.dart';
 import 'package:boole_apps/features/auth/presentation/widgets/socal_card.dart';
 import 'package:flutter/material.dart';
@@ -69,6 +72,7 @@ class _NoAccountText extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
+<<<<<<< HEAD
         Text(
           "Don’t have an account? ",
           style: Theme.of(
@@ -81,6 +85,16 @@ class _NoAccountText extends StatelessWidget {
             "Sign Up",
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
               color: Theme.of(context).colorScheme.secondary,
+=======
+        const Text("Don’t have an account? ", style: TextStyle(fontSize: 16)),
+        GestureDetector(
+          // onTap: () => Navigator.pushNamed(context, SignUpScreen.routeName),
+          child: Text(
+            "Sign Up",
+            style: TextStyle(
+              fontSize: 16,
+              color: Theme.of(context).colorScheme.primary,
+>>>>>>> d2a996685b1f2b164e0dad2151916805a96e5a13
             ),
           ),
         ),
