@@ -1,15 +1,14 @@
-import 'package:boole_apps/app/app_router.dart';
-import 'package:boole_apps/features/auth/presentation/login_screen/components/login_form.dart';
+import 'package:boole_apps/features/auth/presentation/register_screen/components/register_form.dart';
 import 'package:boole_apps/features/auth/presentation/widgets/socal_card.dart';
 import 'package:flutter/material.dart';
 
-class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
+class RegisterScreen extends StatelessWidget {
+  const RegisterScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Sign In")),
+      appBar: AppBar(title: const Text("Sign Up")),
       body: SafeArea(
         child: SizedBox(
           width: double.infinity,
@@ -20,13 +19,13 @@ class LoginScreen extends StatelessWidget {
                 children: [
                   const SizedBox(height: 16),
                   Text(
-                    "Welcome Back",
+                    "Register Account",
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   Text(
-                    "Sign in with your email and password or continue with social media",
+                    "Complete your details or continue with social media",
                     textAlign: TextAlign.center,
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,
@@ -35,7 +34,7 @@ class LoginScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  const LoginForm(),
+                  const RegisterForm(),
                   const SizedBox(height: 16),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -51,40 +50,18 @@ class LoginScreen extends StatelessWidget {
                       SocalCard(icon: "assets/icons/twitter.svg", press: () {}),
                     ],
                   ),
-                  const SizedBox(height: 20),
-                  _NoAccountText(),
+                  const SizedBox(height: 16),
+                  Text(
+                    'By continuing your confirm that you agree \nwith our Term and Condition',
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
                 ],
               ),
             ),
           ),
         ),
       ),
-    );
-  }
-}
-
-class _NoAccountText extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          "Don’t have an account? ",
-          style: Theme.of(
-            context,
-          ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w400),
-        ),
-        GestureDetector(
-          onTap: () => Navigator.pushNamed(context, AppRouter.register),
-          child: Text(
-            "Sign Up",
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              color: Theme.of(context).colorScheme.secondary,
-            ),
-          ),
-        ),
-      ],
     );
   }
 }
