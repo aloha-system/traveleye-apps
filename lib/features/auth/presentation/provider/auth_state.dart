@@ -9,6 +9,10 @@ class AuthState {
 
   const AuthState({this.status = AuthStatus.initial, this.message, this.user});
 
+  bool get isLoading => status == AuthStatus.loading;
+  bool get isSuccess => status == AuthStatus.success;
+  bool get isError => status == AuthStatus.error;
+
   AuthState copyWith({AuthStatus? status, String? message, UserEntity? user}) {
     return AuthState(
       status: status ?? this.status,
