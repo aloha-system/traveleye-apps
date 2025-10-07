@@ -19,7 +19,7 @@ class AuthProvider extends ChangeNotifier {
     required this.resetPasswordUsecase,
   });
 
-  AuthState _state = const AuthState();
+  AuthState _state = AuthState();
   AuthState get state => _state;
 
   UserEntity? _user;
