@@ -219,6 +219,7 @@ class SignFormState extends State<LoginForm> {
                   context.mounted) {
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   // auth state succes return to home screen
+                  Navigator.pushNamed(context, AppRouter.main);
                   // todo: add token for argument if possible
                 });
               }
