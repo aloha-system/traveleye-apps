@@ -54,7 +54,7 @@ class HomeScreen extends StatelessWidget {
                   'Selamat Datang!',
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                     fontWeight: FontWeight.w300,
-                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                    color: Theme.of(context).colorScheme.onSurface.withAlpha((0.7*255).round()),
                   ),
                 ),
                 Text(
@@ -84,7 +84,7 @@ class HomeScreen extends StatelessWidget {
         Text(
           'Jelajahi keindahan Indonesia dengan panduan lengkap',
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+            color: Theme.of(context).colorScheme.onSurface.withAlpha((0.6*255).round()),
           ),
         ),
       ],
@@ -236,10 +236,10 @@ class HomeScreen extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.errorContainer.withOpacity(0.1),
+          color: Theme.of(context).colorScheme.errorContainer.withAlpha((0.1*255).round()),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: Theme.of(context).colorScheme.error.withOpacity(0.2),
+            color: Theme.of(context).colorScheme.error.withAlpha((0.2*255).round()),
           ),
         ),
         child: Row(
@@ -247,7 +247,7 @@ class HomeScreen extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.error.withOpacity(0.1),
+                color: Theme.of(context).colorScheme.error.withAlpha((0.1*255).round()),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(
@@ -272,7 +272,7 @@ class HomeScreen extends StatelessWidget {
                   Text(
                     'Akses cepat ke nomor darurat dan layanan kesehatan',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                      color: Theme.of(context).colorScheme.onSurface.withAlpha((0.7*255).round()),
                     ),
                   ),
                 ],
