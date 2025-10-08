@@ -1,3 +1,4 @@
+import 'package:boole_apps/features/home/presentation/home_screen.dart';
 import 'package:flutter/material.dart';
 
 class MainScreen extends StatelessWidget {
@@ -5,13 +6,6 @@ class MainScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Text(
-          'Ini adalah main screen',
-          style: Theme.of(context).textTheme.bodyLarge,
-        ),
-      ),
-    );
+    return const HomeScreen();
   }
 }
