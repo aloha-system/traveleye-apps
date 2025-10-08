@@ -17,7 +17,7 @@ class AppWidget extends StatelessWidget {
       darkTheme: theme.dark(),
       debugShowCheckedModeBanner: false,
       title: 'Boole Mobile Application',
-      initialRoute: AppRouter.splash,
+      initialRoute: AppRouter.main,
       onGenerateRoute: AppRouter.generateRoute,
     );
   }
