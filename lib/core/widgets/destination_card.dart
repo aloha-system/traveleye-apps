@@ -155,5 +155,3 @@ class DestinationHorizontalList extends StatelessWidget {
     );
   }
 }
-
-
