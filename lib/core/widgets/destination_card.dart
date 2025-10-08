@@ -33,7 +33,7 @@ class DestinationCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: Theme.of(context).colorScheme.shadow.withOpacity(0.1),
+                color: Theme.of(context).colorScheme.shadow.withAlpha((0.1*255).round()),
                 blurRadius: 8,
                 offset: const Offset(0, 2),
               ),
@@ -51,7 +51,7 @@ class DestinationCard extends StatelessWidget {
                       color: Theme.of(context)
                           .colorScheme
                           .primary
-                          .withOpacity(0.1),
+                          .withAlpha((0.1*255).round()),
                       child: const Center(
                         child: CircularProgressIndicator(strokeWidth: 2),
                       ),
@@ -60,7 +60,7 @@ class DestinationCard extends StatelessWidget {
                       color: Theme.of(context)
                           .colorScheme
                           .primary
-                          .withOpacity(0.1),
+                          .withAlpha((0.1*255).round()),
                       child: const Icon(
                         Icons.image_not_supported,
                         size: 40,
@@ -76,7 +76,7 @@ class DestinationCard extends StatelessWidget {
                         end: Alignment.bottomCenter,
                         colors: [
                           Colors.transparent,
-                          Colors.black.withOpacity(0.7),
+                          Colors.black.withAlpha((0.7*255).round()),
                         ],
                       ),
                     ),
@@ -103,7 +103,7 @@ class DestinationCard extends StatelessWidget {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Colors.white.withOpacity(0.85),
+                              color: Colors.white.withAlpha((0.85*255).round()),
                             ),
                       ),
                       const SizedBox(height: 8),

@@ -22,14 +22,14 @@ class AppSearchBar extends StatelessWidget {
           color: Theme.of(context).colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
+            color: Theme.of(context).colorScheme.outline.withAlpha((0.2*255).round()),
           ),
         ),
         child: Row(
           children: [
             Icon(
               Icons.search,
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+              color: Theme.of(context).colorScheme.onSurface.withAlpha((0.6*255).round()),
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -41,7 +41,7 @@ class AppSearchBar extends StatelessWidget {
                       color: Theme.of(context)
                           .colorScheme
                           .onSurface
-                          .withOpacity(0.6),
+                          .withAlpha((0.6*255).round()),
                     ),
               ),
             ),
