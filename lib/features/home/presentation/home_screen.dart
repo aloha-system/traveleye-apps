@@ -156,8 +156,6 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  
-
   Widget _buildPopularDestinations(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
