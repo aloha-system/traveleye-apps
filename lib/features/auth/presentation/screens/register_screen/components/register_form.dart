@@ -252,10 +252,31 @@ class _RegisterFormState extends State<RegisterForm> {
               else if (auth.state.status == AuthStatus.success &&
                   context.mounted) {
                 WidgetsBinding.instance.addPostFrameCallback((_) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('create account succes')),
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: Text(
+                          'Create account success',
+                          style: Theme.of(context).textTheme.bodyLarge
+                              ?.copyWith(fontWeight: FontWeight.bold),
+                          maxLines: 2,
+                        ),
+                        content: Text('Please Sign In to continue.'),
+                        actions: [
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.pushReplacementNamed(
+                                context,
+                                AppRouter.login,
+                              );
+                            },
+                            child: Text('Sign In'),
+                          ),
+                        ],
+                      );
+                    },
                   );
-                  Navigator.pushReplacementNamed(context, AppRouter.login);
                 });
               }
 
