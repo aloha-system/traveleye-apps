@@ -42,4 +42,10 @@ class AuthRepositoryImp implements AuthRepository {
   Future<void> resetPassword(String email) async {
     await remoteDatasource.resetPassword(email);
   }
+  
+  @override
+  Future<UserEntity?> getCurrentUser() {
+    // TODO: implement getCurrentUser
+    throw UnimplementedError();
+  }
 }
