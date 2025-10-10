@@ -1,6 +1,8 @@
 import 'package:boole_apps/features/auth/domain/entities/user_entity.dart';
 
 abstract class AuthRepository {
+  Future<UserEntity?> getCurrentUser();
+
   Future<UserEntity> createAccount({
     required String email,
     required String password,
