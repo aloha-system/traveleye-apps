@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:boole_apps/core/widgets/app_search_bar.dart';
 import 'package:boole_apps/features/home/presentation/widgets/quick_actions.dart';
 import 'package:boole_apps/core/widgets/destination_card.dart';
+import 'package:boole_apps/app/app_router.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -18,6 +19,7 @@ class HomeScreen extends StatelessWidget {
               _buildHeader(context),
               const SizedBox(height: 24),
               AppSearchBar(
+                onTap: () => Navigator.pushNamed(context, AppRouter.search),
                 onFilterTap: () {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
@@ -53,16 +55,19 @@ class HomeScreen extends StatelessWidget {
                 Text(
                   'Selamat Datang!',
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.w300,
-                    color: Theme.of(context).colorScheme.onSurface.withAlpha((0.7*255).round()),
-                  ),
+                        fontWeight: FontWeight.w300,
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withAlpha((0.7 * 255).round()),
+                      ),
                 ),
                 Text(
                   'TravelEye',
                   style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
                 ),
               ],
             ),
@@ -84,14 +89,15 @@ class HomeScreen extends StatelessWidget {
         Text(
           'Jelajahi keindahan Indonesia dengan panduan lengkap',
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-            color: Theme.of(context).colorScheme.onSurface.withAlpha((0.6*255).round()),
-          ),
+                color: Theme.of(context)
+                    .colorScheme
+                    .onSurface
+                    .withAlpha((0.6 * 255).round()),
+              ),
         ),
       ],
     );
   }
-
-  
 
   Widget _buildQuickActions(BuildContext context) {
     final actions = [
@@ -127,8 +133,8 @@ class HomeScreen extends StatelessWidget {
         Text(
           'Layanan Utama',
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+                fontWeight: FontWeight.bold,
+              ),
         ),
         const SizedBox(height: 16),
         QuickActionsGrid(
@@ -140,13 +146,23 @@ class HomeScreen extends StatelessWidget {
                   icon: a['icon'] as IconData,
                   color: a['color'] as Color,
                   onTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('${a['title']} - Coming Soon!'),
-                        backgroundColor:
-                            Theme.of(context).colorScheme.primary,
-                      ),
-                    );
+                    if ((a['title'] as String) == 'Destinasi') {
+                      Navigator.pushNamed(
+                        context,
+                        AppRouter.search,
+                        arguments: {
+                          'popularOnly': true,
+                        },
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('${a['title']} - Coming Soon!'),
+                          backgroundColor:
+                              Theme.of(context).colorScheme.primary,
+                        ),
+                      );
+                    }
                   },
                 ),
               )
@@ -161,23 +177,32 @@ class HomeScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              'Destinasi Populer',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
+            Expanded(
+              child: Text(
+                'Destinasi Populer',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
               ),
             ),
             TextButton(
-              onPressed: () {},
-              child: Text(
-                'Lihat Semua',
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.primary,
-                  fontWeight: FontWeight.w600,
-                ),
+              onPressed: () {
+                Navigator.pushNamed(
+                  context,
+                  AppRouter.search,
+                  arguments: {'popularOnly': true},
+                );
+              },
+              style: TextButton.styleFrom(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                minimumSize: const Size(0, 0),
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               ),
+              child: const Text('Lihat Semua',
+                  overflow: TextOverflow.ellipsis),
             ),
           ],
         ),
@@ -236,10 +261,16 @@ class HomeScreen extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.errorContainer.withAlpha((0.1*255).round()),
+          color: Theme.of(context)
+              .colorScheme
+              .errorContainer
+              .withAlpha((0.1 * 255).round()),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: Theme.of(context).colorScheme.error.withAlpha((0.2*255).round()),
+            color: Theme.of(context)
+                .colorScheme
+                .error
+                .withAlpha((0.2 * 255).round()),
           ),
         ),
         child: Row(
@@ -247,7 +278,10 @@ class HomeScreen extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.error.withAlpha((0.1*255).round()),
+                color: Theme.of(context)
+                    .colorScheme
+                    .error
+                    .withAlpha((0.1 * 255).round()),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(
@@ -264,16 +298,19 @@ class HomeScreen extends StatelessWidget {
                   Text(
                     'Layanan Darurat',
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.error,
-                    ),
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.error,
+                        ),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     'Akses cepat ke nomor darurat dan layanan kesehatan',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurface.withAlpha((0.7*255).round()),
-                    ),
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSurface
+                              .withAlpha((0.7 * 255).round()),
+                        ),
                   ),
                 ],
               ),
