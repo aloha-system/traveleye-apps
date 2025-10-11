@@ -151,6 +151,8 @@ class HomeScreen extends StatelessWidget {
                         AppRouter.destination,
                         arguments: {'popularOnly': true},
                       );
+                    } else if ((a['title'] as String) == 'Culture') {
+                      Navigator.pushNamed(context, AppRouter.culture);
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
