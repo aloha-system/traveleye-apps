@@ -7,7 +7,7 @@ class AppSearchBar extends StatelessWidget {
 
   const AppSearchBar({
     super.key,
-    this.hintText = 'Cari destinasi wisata...',
+    this.hintText = 'Search for destinations...',
     this.onFilterTap,
     this.onTap,
   });
@@ -22,14 +22,18 @@ class AppSearchBar extends StatelessWidget {
           color: Theme.of(context).colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: Theme.of(context).colorScheme.outline.withAlpha((0.2*255).round()),
+            color: Theme.of(
+              context,
+            ).colorScheme.outline.withAlpha((0.2 * 255).round()),
           ),
         ),
         child: Row(
           children: [
             Icon(
               Icons.search,
-              color: Theme.of(context).colorScheme.onSurface.withAlpha((0.6*255).round()),
+              color: Theme.of(
+                context,
+              ).colorScheme.onSurface.withAlpha((0.6 * 255).round()),
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -38,11 +42,10 @@ class AppSearchBar extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onSurface
-                          .withAlpha((0.6*255).round()),
-                    ),
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withAlpha((0.6 * 255).round()),
+                ),
               ),
             ),
             InkWell(
