@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:boole_apps/core/widgets/app_search_bar.dart';
-import 'package:boole_apps/features/home/presentation/widgets/quick_actions.dart';
-import 'package:boole_apps/core/widgets/destination_card.dart';
 import 'package:boole_apps/app/app_router.dart';
+import 'package:boole_apps/core/widgets/app_search_bar.dart';
+import 'package:boole_apps/core/widgets/destination_card.dart';
+import 'package:boole_apps/features/home/presentation/widgets/quick_actions.dart';
+import 'package:flutter/material.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -19,7 +19,8 @@ class HomeScreen extends StatelessWidget {
               _buildHeader(context),
               const SizedBox(height: 24),
               AppSearchBar(
-                onTap: () => Navigator.pushNamed(context, AppRouter.destination),
+                onTap: () =>
+                    Navigator.pushNamed(context, AppRouter.destination),
                 onFilterTap: () {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
@@ -53,21 +54,20 @@ class HomeScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Selamat Datang!',
+                  'Welcome!',
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.w300,
-                        color: Theme.of(context)
-                            .colorScheme
-                            .onSurface
-                            .withAlpha((0.7 * 255).round()),
-                      ),
+                    fontWeight: FontWeight.w300,
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.onSurface.withAlpha((0.7 * 255).round()),
+                  ),
                 ),
                 Text(
-                  'TravelEye',
+                  'BooLe',
                   style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
                 ),
               ],
             ),
@@ -87,13 +87,12 @@ class HomeScreen extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         Text(
-          'Jelajahi keindahan Indonesia dengan panduan lengkap',
+          'Explore the beauty of Indonesia with a complete guide.',
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context)
-                    .colorScheme
-                    .onSurface
-                    .withAlpha((0.6 * 255).round()),
-              ),
+            color: Theme.of(
+              context,
+            ).colorScheme.onSurface.withAlpha((0.6 * 255).round()),
+          ),
         ),
       ],
     );
@@ -102,25 +101,25 @@ class HomeScreen extends StatelessWidget {
   Widget _buildQuickActions(BuildContext context) {
     final actions = [
       {
-        'title': 'Destinasi',
-        'subtitle': 'Temukan tempat wisata',
+        'title': 'Destination',
+        'subtitle': 'Discover tourist destinations.',
         'icon': Icons.location_on,
         'color': Colors.blue,
       },
       {
-        'title': 'Budaya',
-        'subtitle': 'Panduan etika lokal',
+        'title': 'Culture',
+        'subtitle': 'Local etiquette guide.',
         'icon': Icons.people,
         'color': Colors.green,
       },
       {
-        'title': 'Navigasi',
-        'subtitle': 'Rute & transportasi',
+        'title': 'Navigation',
+        'subtitle': 'Routes & transportation.',
         'icon': Icons.directions,
         'color': Colors.orange,
       },
       {
-        'title': 'Penerjemah',
+        'title': 'Translator',
         'subtitle': 'EN ↔ ID',
         'icon': Icons.translate,
         'color': Colors.purple,
@@ -131,10 +130,10 @@ class HomeScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Layanan Utama',
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+          'Main Services',
+          style: Theme.of(
+            context,
+          ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 16),
         QuickActionsGrid(
@@ -146,20 +145,19 @@ class HomeScreen extends StatelessWidget {
                   icon: a['icon'] as IconData,
                   color: a['color'] as Color,
                   onTap: () {
-                    if ((a['title'] as String) == 'Destinasi') {
+                    if ((a['title'] as String) == 'Destination') {
                       Navigator.pushNamed(
                         context,
                         AppRouter.destination,
-                        arguments: {
-                          'popularOnly': true,
-                        },
+                        arguments: {'popularOnly': true},
                       );
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text('${a['title']} - Coming Soon!'),
-                          backgroundColor:
-                              Theme.of(context).colorScheme.primary,
+                          backgroundColor: Theme.of(
+                            context,
+                          ).colorScheme.primary,
                         ),
                       );
                     }
@@ -180,12 +178,12 @@ class HomeScreen extends StatelessWidget {
           children: [
             Expanded(
               child: Text(
-                'Destinasi Populer',
+                'Popular Destination',
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
               ),
             ),
             TextButton(
@@ -201,8 +199,7 @@ class HomeScreen extends StatelessWidget {
                 minimumSize: const Size(0, 0),
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               ),
-              child: const Text('Lihat Semua',
-                  overflow: TextOverflow.ellipsis),
+              child: const Text('See More', overflow: TextOverflow.ellipsis),
             ),
           ],
         ),
@@ -225,28 +222,28 @@ class HomeScreen extends StatelessWidget {
   }
 
   List<Map<String, String>> _mockDestinations() => [
-        {
-          'name': 'Bali',
-          'location': 'Pulau Dewata',
-          'image':
-              'https://images.unsplash.com/photo-1537953773345-d172ccf13cf1?w=300',
-          'rating': '4.8',
-        },
-        {
-          'name': 'Yogyakarta',
-          'location': 'Kota Gudeg',
-          'image':
-              'https://images.unsplash.com/photo-1555993539-1732b0258235?w=300',
-          'rating': '4.7',
-        },
-        {
-          'name': 'Raja Ampat',
-          'location': 'Papua Barat',
-          'image':
-              'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=300',
-          'rating': '4.9',
-        },
-      ];
+    {
+      'name': 'Bali',
+      'location': 'Dewata Island',
+      'image':
+          'https://images.unsplash.com/photo-1537953773345-d172ccf13cf1?w=300',
+      'rating': '4.8',
+    },
+    {
+      'name': 'Yogyakarta',
+      'location': 'Gudeg City',
+      'image':
+          'https://images.unsplash.com/photo-1555993539-1732b0258235?w=300',
+      'rating': '4.7',
+    },
+    {
+      'name': 'Raja Ampat',
+      'location': 'West Papua',
+      'image':
+          'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=300',
+      'rating': '4.9',
+    },
+  ];
 
   Widget _buildEmergencySection(BuildContext context) {
     return GestureDetector(
@@ -261,16 +258,14 @@ class HomeScreen extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: Theme.of(context)
-              .colorScheme
-              .errorContainer
-              .withAlpha((0.1 * 255).round()),
+          color: Theme.of(
+            context,
+          ).colorScheme.errorContainer.withAlpha((0.1 * 255).round()),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: Theme.of(context)
-                .colorScheme
-                .error
-                .withAlpha((0.2 * 255).round()),
+            color: Theme.of(
+              context,
+            ).colorScheme.error.withAlpha((0.2 * 255).round()),
           ),
         ),
         child: Row(
@@ -278,10 +273,9 @@ class HomeScreen extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Theme.of(context)
-                    .colorScheme
-                    .error
-                    .withAlpha((0.1 * 255).round()),
+                color: Theme.of(
+                  context,
+                ).colorScheme.error.withAlpha((0.1 * 255).round()),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(
@@ -296,21 +290,20 @@ class HomeScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Layanan Darurat',
+                    'Emergency services.',
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).colorScheme.error,
-                        ),
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.error,
+                    ),
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'Akses cepat ke nomor darurat dan layanan kesehatan',
+                    'Quick access to emergency numbers and healthcare services.',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onSurface
-                              .withAlpha((0.7 * 255).round()),
-                        ),
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.onSurface.withAlpha((0.7 * 255).round()),
+                    ),
                   ),
                 ],
               ),
