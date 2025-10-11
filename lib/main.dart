@@ -9,7 +9,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  // todo: create dependecies injection for project
 
   runApp(
     MultiProvider(providers: AppInjection.providers(), child: AppWidget()),
