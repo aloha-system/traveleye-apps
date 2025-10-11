@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-class SearchRemoteDatasource {
+class DestinationRemoteDatasource {
   final String baseUrl;
   final String apiKey;
 
-  SearchRemoteDatasource({
+  DestinationRemoteDatasource({
     required this.baseUrl,
     required this.apiKey,
   });
