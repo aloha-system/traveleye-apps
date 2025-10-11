@@ -19,7 +19,7 @@ class HomeScreen extends StatelessWidget {
               _buildHeader(context),
               const SizedBox(height: 24),
               AppSearchBar(
-                onTap: () => Navigator.pushNamed(context, AppRouter.search),
+                onTap: () => Navigator.pushNamed(context, AppRouter.destination),
                 onFilterTap: () {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
@@ -149,7 +149,7 @@ class HomeScreen extends StatelessWidget {
                     if ((a['title'] as String) == 'Destinasi') {
                       Navigator.pushNamed(
                         context,
-                        AppRouter.search,
+                        AppRouter.destination,
                         arguments: {
                           'popularOnly': true,
                         },
@@ -192,7 +192,7 @@ class HomeScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.pushNamed(
                   context,
-                  AppRouter.search,
+                  AppRouter.destination,
                   arguments: {'popularOnly': true},
                 );
               },
