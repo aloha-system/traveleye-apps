@@ -19,8 +19,8 @@ class SignFormState extends State<LoginForm> {
   final _formKey = GlobalKey<FormState>();
   bool? remember = false;
   final List<String?> errors = [];
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   String? _lastErrorMessageShown;
 
@@ -40,7 +40,13 @@ class SignFormState extends State<LoginForm> {
     }
   }
 
-  void signIn() {}
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -219,7 +225,7 @@ class SignFormState extends State<LoginForm> {
                   context.mounted) {
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   // auth state succes return to home screen
-                  Navigator.pushNamed(context, AppRouter.main);
+                  Navigator.pushNamed(context, AppRouter.home);
                   // todo: add token for argument if possible
                 });
               }
