@@ -42,10 +42,19 @@ class AuthRepositoryImp implements AuthRepository {
   Future<void> resetPassword(String email) async {
     await remoteDatasource.resetPassword(email);
   }
-  
+
   @override
-  Future<UserEntity?> getCurrentUser() {
-    // TODO: implement getCurrentUser
-    throw UnimplementedError();
+  Future<UserEntity?> getCurrentUser() async {
+    final user = remoteDatasource.firebaseAuth.currentUser;
+
+    if (user != null) {
+      return UserEntity(
+        uid: user.uid,
+        email: user.email ?? '',
+        displayName: user.displayName,
+        photoUrl: user.photoURL,
+      );
+    }
+    return null;
   }
 }

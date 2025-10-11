@@ -1,4 +1,5 @@
 import 'package:boole_apps/features/auth/domain/entities/user_entity.dart';
+import 'package:boole_apps/features/auth/domain/usecases/check_auth_status_usecase.dart';
 import 'package:boole_apps/features/auth/domain/usecases/create_account_usecase.dart';
 import 'package:boole_apps/features/auth/domain/usecases/reset_password_usecase.dart';
 import 'package:boole_apps/features/auth/domain/usecases/sign_in_usecase.dart';
@@ -11,12 +12,14 @@ class AuthProvider extends ChangeNotifier {
   final SignInUsecase signInUsecase;
   final SignOutUsecase signOutUsecase;
   final ResetPasswordUsecase resetPasswordUsecase;
+  final CheckAuthStatusUsecase checkAuthStatusUsecase;
 
   AuthProvider({
     required this.createAccountUsecase,
     required this.signInUsecase,
     required this.signOutUsecase,
     required this.resetPasswordUsecase,
+    required this.checkAuthStatusUsecase,
   });
 
   AuthState _state = AuthState();
@@ -24,6 +27,23 @@ class AuthProvider extends ChangeNotifier {
 
   UserEntity? _user;
   UserEntity? get user => _user;
+
+  void _emit(AuthState newState) {
+    _state = newState;
+    notifyListeners();
+  }
+
+  // check auth status trigger method
+  Future<void> _checkAuthStatus() async {
+    final user = await checkAuthStatusUsecase();
+
+    if (user != null) {
+      _state = state.copyWith(status: AuthStatus.success, user: user);
+    } else {
+      _state = state.copyWith(status: AuthStatus.initial);
+    }
+    notifyListeners();
+  }
 
   // create account trigger method
   Future<void> createAccount(String email, String password, String name) async {
