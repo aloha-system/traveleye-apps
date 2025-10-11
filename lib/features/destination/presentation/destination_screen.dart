@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:boole_apps/core/widgets/destination_card.dart';
-import 'package:boole_apps/features/search/presentation/widgets/search_notifier.dart';
+import 'package:boole_apps/features/destination/presentation/providers/destination_provider.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -17,7 +17,7 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   void initState() {
     super.initState();
-    final c = context.read<SearchNotifier>();
+    final c = context.read<DestinationProvider>();
     _text.text = c.keyword;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       c.initialSearchIfNeeded();
@@ -34,7 +34,7 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final c = context.watch<SearchNotifier>();
+    final c = context.watch<DestinationProvider>();
 
     return Scaffold(
       appBar: AppBar(
@@ -73,7 +73,7 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   void _openFilterSheet(BuildContext context) {
-    final c = context.read<SearchNotifier>();
+    final c = context.read<DestinationProvider>();
     showModalBottomSheet(
       context: context,
       showDragHandle: true,
@@ -196,7 +196,7 @@ class _QuickFilters extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final c = context.watch<SearchNotifier>();
+    final c = context.watch<DestinationProvider>();
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -254,7 +254,7 @@ class _ResultList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final c = context.watch<SearchNotifier>();
+    final c = context.watch<DestinationProvider>();
 
     if (c.loading) {
       return const Center(

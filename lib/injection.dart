@@ -14,10 +14,10 @@ import 'features/auth/domain/usecases/sign_out_usecase.dart';
 import 'features/auth/presentation/provider/auth_provider.dart';
 
 // ==== Feature Search (Supabase REST) ====
-import 'features/search/data/datasources/search_remote_datasource.dart';
-import 'features/search/data/repositories/search_repository_impl.dart';
-import 'features/search/domain/repositories/search_repository.dart';
-import 'features/search/domain/usecases/search_destinations_usecase.dart';
+import 'features/destination/data/datasources/destination_remote_datasource.dart';
+import 'features/destination/data/repositories/destination_repository_impl.dart';
+import 'features/destination/domain/repositories/destination_repository.dart';
+import 'features/destination/domain/usecases/search_destinations_usecase.dart';
 
 class AppInjection {
   // Supabase REST constants (AMAN untuk public anon key, tapi sebaiknya simpan via env/secret jika produksi)
@@ -94,23 +94,23 @@ class AppInjection {
     // SEARCH CHAIN (Supabase REST)
     // ==============================
 
-    // DataSource -> panggil Supabase REST destinations
-    Provider<SearchRemoteDatasource>(
-      create: (_) => SearchRemoteDatasource(
-        baseUrl: _supabaseDestinationsEndpoint,
-        apiKey: _supabaseAnonKey,
-      ),
-    ),
+        // DataSource -> panggil Supabase REST destinations
+        Provider<DestinationRemoteDatasource>(
+          create: (_) => DestinationRemoteDatasource(
+            baseUrl: _supabaseDestinationsEndpoint,
+            apiKey: _supabaseAnonKey,
+          ),
+        ),
 
-    // Repository
-    ProxyProvider<SearchRemoteDatasource, SearchRepository>(
-      update: (_, ds, __) => SearchRepositoryImpl(ds),
-    ),
+        // Repository
+        ProxyProvider<DestinationRemoteDatasource, DestinationRepository>(
+          update: (_, ds, __) => DestinationRepositoryImpl(ds),
+        ),
 
-    // UseCase
-    ProxyProvider<SearchRepository, SearchDestinationsUsecase>(
-      update: (_, repo, __) => SearchDestinationsUsecase(repo),
-    ),
+        // UseCase
+        ProxyProvider<DestinationRepository, SearchDestinationsUsecase>(
+          update: (_, repo, __) => SearchDestinationsUsecase(repo),
+        ),
 
     // NOTE:
     // SearchNotifier (ChangeNotifier) tidak di-register di sini,
