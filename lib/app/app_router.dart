@@ -3,18 +3,18 @@ import 'package:boole_apps/features/auth/presentation/screens/login_screen/login
 import 'package:boole_apps/features/auth/presentation/screens/register_screen/register_screen.dart';
 import 'package:boole_apps/features/auth/presentation/screens/splash_screen/splash_screen.dart';
 import 'package:boole_apps/features/home/presentation/home_screen.dart';
-import 'package:boole_apps/features/search/presentation/search_screen.dart';
-import 'package:boole_apps/features/search/presentation/widgets/search_notifier.dart';
+import 'package:boole_apps/features/destination/presentation/destination_screen.dart';
+import 'package:boole_apps/features/destination/presentation/providers/destination_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:boole_apps/features/search/domain/usecases/search_destinations_usecase.dart';
-import 'package:boole_apps/features/search/domain/entities/destination.dart';
+import 'package:boole_apps/features/destination/domain/usecases/search_destinations_usecase.dart';
+import 'package:boole_apps/features/destination/domain/entities/destination.dart';
 
 class AppRouter {
   static const String splash = '/splash';
   static const String main = '/main';
   static const String home = '/home';
-  static const String search = '/search';
+  static const String destination = '/search';
   static const String login = '/login';
   static const String register = '/register';
 
@@ -33,7 +33,7 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => LoginScreen(), settings: settings);
 
       // ====== SEARCH ======
-      case search: {
+      case destination: {
         // opsional: bisa kirim arguments saat pushNamed
         // Navigator.pushNamed(context, AppRouter.search, arguments: {'prefill': 'Bali', 'popularOnly': true});
         final args = (settings.arguments is Map) ? settings.arguments as Map : const {};
@@ -58,8 +58,8 @@ class AppRouter {
               );
             }
 
-            return ChangeNotifierProvider<SearchNotifier>(
-              create: (_) => SearchNotifier(useCase: usecase, mapper: mapper)
+            return ChangeNotifierProvider<DestinationProvider>(
+              create: (_) => DestinationProvider(useCase: usecase, mapper: mapper)
                 ..prefill(prefill)
                 ..setPopular(popularOnly),
               child: const SearchScreen(),
