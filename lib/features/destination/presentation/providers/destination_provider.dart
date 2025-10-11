@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:boole_apps/features/search/domain/usecases/search_destinations_usecase.dart';
+import 'package:boole_apps/features/destination/domain/usecases/search_destinations_usecase.dart';
 
 class SearchItem {
   final String id;
@@ -20,11 +20,11 @@ class SearchItem {
 
 typedef DestinationMapper = SearchItem Function(Object entity);
 
-class SearchNotifier extends ChangeNotifier {
+class DestinationProvider extends ChangeNotifier {
   final SearchDestinationsUsecase _usecase;
   final DestinationMapper _mapper;
 
-  SearchNotifier({
+  DestinationProvider({
     required SearchDestinationsUsecase useCase,
     required DestinationMapper mapper,
   })  : _usecase = useCase,

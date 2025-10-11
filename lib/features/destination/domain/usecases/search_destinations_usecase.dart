@@ -1,5 +1,5 @@
-import 'package:boole_apps/features/search/domain/entities/destination.dart';
-import 'package:boole_apps/features/search/domain/repositories/search_repository.dart';
+import 'package:boole_apps/features/destination/domain/entities/destination.dart';
+import 'package:boole_apps/features/destination/domain/repositories/destination_repository.dart';
 
 /// Parameter pencarian destinasi wisata
 class SearchParams {
@@ -40,7 +40,7 @@ class SearchParams {
 
 /// Usecase untuk mencari destinasi wisata
 class SearchDestinationsUsecase {
-  final SearchRepository _repository;
+  final DestinationRepository _repository;
   const SearchDestinationsUsecase(this._repository);
 
   Future<List<Destination>> call(SearchParams params) {
