@@ -1,6 +1,9 @@
 import 'package:boole_apps/app/app_router.dart';
+import 'package:boole_apps/features/auth/presentation/provider/auth_provider.dart';
+import 'package:boole_apps/features/auth/presentation/provider/auth_state.dart';
 import 'package:boole_apps/features/auth/presentation/screens/splash_screen/components/splash_content.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SplashScreen extends StatefulWidget {
   final int index;
@@ -17,6 +20,23 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
+    Future.microtask(() {
+      if (!mounted) return;
+      final authProvider = context.read<AuthProvider>();
+
+      authProvider.checkAuthStatusUsecase();
+
+      authProvider.addListener(() {
+        final state = authProvider.state;
+
+        if (state.isSuccess) {
+          Navigator.pushReplacementNamed(context, AppRouter.home);
+        } else if (state.status == AuthStatus.initial) {
+          Navigator.pushReplacementNamed(context, AppRouter.login);
+        }
+      });
+    });
+
     currentPage = widget.index;
   }
 
