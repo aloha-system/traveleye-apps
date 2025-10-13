@@ -3,17 +3,12 @@ import 'package:boole_apps/features/auth/presentation/screens/login_screen/login
 import 'package:boole_apps/features/auth/presentation/screens/register_screen/register_screen.dart';
 import 'package:boole_apps/features/auth/presentation/screens/splash_screen/splash_screen.dart';
 import 'package:boole_apps/features/home/presentation/home_screen.dart';
-<<<<<<< HEAD
-import 'package:boole_apps/features/destination/presentation/destination_screen.dart';
-import 'package:boole_apps/features/destination/presentation/providers/destination_provider.dart';
-=======
 import 'package:boole_apps/features/translate/presentation/translate_page.dart';
->>>>>>> 4c8e7ef (feat(translate): implement translation feature with speech recognition and text-to-speech capabilities)
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:boole_apps/features/destination/domain/usecases/search_destinations_usecase.dart';
 import 'package:boole_apps/features/destination/domain/entities/destination.dart';
-import 'package:boole_apps/features/detail/presentation/screens/detail_screen.dart';
+import 'package:boole_apps/features/detail/presentation/detail_screen.dart';
 import 'package:boole_apps/features/detail/presentation/providers/detail_provider.dart';
 import 'package:boole_apps/features/detail/domain/usecases/get_destination_detail_usecase.dart';
 
@@ -88,14 +83,9 @@ class AppRouter {
             ),
           );
       case register:
-<<<<<<< HEAD
-        return MaterialPageRoute(builder: (_) => RegisterScreen(), settings: settings);
-
-=======
         return MaterialPageRoute(builder: (_) => RegisterScreen());
       case translate:
         return MaterialPageRoute(builder: (_) => const TranslatePage());
->>>>>>> 4c8e7ef (feat(translate): implement translation feature with speech recognition and text-to-speech capabilities)
       default:
         return MaterialPageRoute(
           builder: (_) => const Scaffold(
