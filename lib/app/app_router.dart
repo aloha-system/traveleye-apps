@@ -9,12 +9,16 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:boole_apps/features/destination/domain/usecases/search_destinations_usecase.dart';
 import 'package:boole_apps/features/destination/domain/entities/destination.dart';
+import 'package:boole_apps/features/detail/presentation/screens/detail_screen.dart';
+import 'package:boole_apps/features/detail/presentation/providers/detail_provider.dart';
+import 'package:boole_apps/features/detail/domain/usecases/get_destination_detail_usecase.dart';
 
 class AppRouter {
   static const String splash = '/splash';
   static const String main = '/main';
   static const String home = '/home';
   static const String destination = '/search';
+  static const String detail = '/detail';
   static const String login = '/login';
   static const String register = '/register';
 
@@ -68,6 +72,16 @@ class AppRouter {
         );
       }
 
+      case '/detail':
+          final args = settings.arguments as String;
+          return MaterialPageRoute(
+            builder: (_) => ChangeNotifierProvider(
+              create: (context) => DetailNotifier(
+                getDetail: context.read<GetDestinationDetailUsecase>(),
+              )..fetch(args),
+              child: DetailScreen(id: args),
+            ),
+          );
       case register:
         return MaterialPageRoute(builder: (_) => RegisterScreen(), settings: settings);
 

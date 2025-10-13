@@ -13,88 +13,77 @@ import 'features/auth/domain/usecases/sign_in_usecase.dart';
 import 'features/auth/domain/usecases/sign_out_usecase.dart';
 import 'features/auth/presentation/provider/auth_provider.dart';
 
-// ==== Feature Search (Supabase REST) ====
+// ==== Feature Destination (Search) ====
 import 'features/destination/data/datasources/destination_remote_datasource.dart';
 import 'features/destination/data/repositories/destination_repository_impl.dart';
 import 'features/destination/domain/repositories/destination_repository.dart';
 import 'features/destination/domain/usecases/search_destinations_usecase.dart';
 
+// ==== Feature Detail ====
+import 'features/detail/data/datasources/detail_remote_datasource.dart';
+import 'features/detail/data/repositories/detail_repository_impl.dart';
+import 'features/detail/domain/repositories/detail_repository.dart';
+import 'features/detail/domain/usecases/get_destination_detail_usecase.dart';
+import 'features/detail/presentation/providers/detail_provider.dart';
+
 class AppInjection {
-  // Supabase REST constants (AMAN untuk public anon key, tapi sebaiknya simpan via env/secret jika produksi)
+  // Supabase REST constants (sementara hardcoded, nanti bisa diganti ke .env)
   static const String _supabaseDestinationsEndpoint =
       'https://fowfuytbmgxpeogsaiwk.supabase.co/rest/v1/destinations';
   static const String _supabaseAnonKey =
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZvd2Z1eXRibWd4cGVvZ3NhaXdrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAwNDI4NjYsImV4cCI6MjA3NTYxODg2Nn0.CF7lItv-9QRfTGaNbs3Wfoxx_92xm7OBr3K8zxKdEkI';
 
   static List<SingleChildWidget> providers() => [
-    // ==============================
-    // AUTH CHAIN
-    // ==============================
+        // ==============================
+        // AUTH CHAIN
+        // ==============================
+        Provider<FirebaseAuth>(create: (_) => FirebaseAuth.instance),
 
-    // Firebase Auth instance
-    Provider<FirebaseAuth>(create: (_) => FirebaseAuth.instance),
+        ProxyProvider<FirebaseAuth, AuthRemoteDatasource>(
+          update: (_, firebaseAuth, __) => AuthRemoteDatasource(firebaseAuth),
+        ),
 
-    // Remote Data Source
-    ProxyProvider<FirebaseAuth, AuthRemoteDatasource>(
-      update: (_, firebaseAuth, __) => AuthRemoteDatasource(firebaseAuth),
-    ),
+        ProxyProvider<AuthRemoteDatasource, AuthRepository>(
+          update: (_, remoteDatasource, __) =>
+              AuthRepositoryImp(remoteDatasource),
+        ),
 
-    // Repository
-    ProxyProvider<AuthRemoteDatasource, AuthRepository>(
-      update: (_, remoteDatasource, __) => AuthRepositoryImp(remoteDatasource),
-    ),
+        ProxyProvider<AuthRepository, CreateAccountUsecase>(
+          update: (_, repo, __) => CreateAccountUsecase(repo),
+        ),
+        ProxyProvider<AuthRepository, SignInUsecase>(
+          update: (_, repo, __) => SignInUsecase(repo),
+        ),
+        ProxyProvider<AuthRepository, SignOutUsecase>(
+          update: (_, repo, __) => SignOutUsecase(repo),
+        ),
+        ProxyProvider<AuthRepository, ResetPasswordUsecase>(
+          update: (_, repo, __) => ResetPasswordUsecase(repo),
+        ),
+        ProxyProvider<AuthRepository, CheckAuthStatusUsecase>(
+          update: (_, repo, __) => CheckAuthStatusUsecase(repo),
+        ),
 
-    // UseCases
-    ProxyProvider<AuthRepository, CreateAccountUsecase>(
-      update: (_, repository, __) => CreateAccountUsecase(repository),
-    ),
-    ProxyProvider<AuthRepository, SignInUsecase>(
-      update: (_, repository, __) => SignInUsecase(repository),
-    ),
-    ProxyProvider<AuthRepository, SignOutUsecase>(
-      update: (_, repository, __) => SignOutUsecase(repository),
-    ),
-    ProxyProvider<AuthRepository, ResetPasswordUsecase>(
-      update: (_, repository, __) => ResetPasswordUsecase(repository),
-    ),
+        ChangeNotifierProxyProvider5<
+            CreateAccountUsecase,
+            SignInUsecase,
+            SignOutUsecase,
+            ResetPasswordUsecase,
+            CheckAuthStatusUsecase,
+            AuthProvider>(
+          create: (context) => AuthProvider(
+            createAccountUsecase: context.read<CreateAccountUsecase>(),
+            signInUsecase: context.read<SignInUsecase>(),
+            signOutUsecase: context.read<SignOutUsecase>(),
+            resetPasswordUsecase: context.read<ResetPasswordUsecase>(),
+            checkAuthStatusUsecase: context.read<CheckAuthStatusUsecase>(),
+          ),
+          update: (_, a, b, c, d, e, authProvider) => authProvider!,
+        ),
 
-    ProxyProvider<AuthRepository, CheckAuthStatusUsecase>(
-      update: (_, repository, __) => CheckAuthStatusUsecase(repository),
-    ),
-
-    // AuthProvider
-    ChangeNotifierProxyProvider5<
-      CreateAccountUsecase,
-      SignInUsecase,
-      SignOutUsecase,
-      ResetPasswordUsecase,
-      CheckAuthStatusUsecase,
-      AuthProvider
-    >(
-      create: (context) => AuthProvider(
-        createAccountUsecase: context.read<CreateAccountUsecase>(),
-        signInUsecase: context.read<SignInUsecase>(),
-        signOutUsecase: context.read<SignOutUsecase>(),
-        resetPasswordUsecase: context.read<ResetPasswordUsecase>(),
-        checkAuthStatusUsecase: context.read<CheckAuthStatusUsecase>(),
-      ),
-      update:
-          (
-            _,
-            createAccount,
-            signIn,
-            signOut,
-            resetPassword,
-            checkAuthStatus,
-            authProvider,
-          ) => authProvider!,
-    ),
-
-    // ==============================
-    // SEARCH CHAIN (Supabase REST)
-    // ==============================
-
-        // DataSource -> panggil Supabase REST destinations
+        // ==============================
+        // DESTINATION (SEARCH) CHAIN
+        // ==============================
         Provider<DestinationRemoteDatasource>(
           create: (_) => DestinationRemoteDatasource(
             baseUrl: _supabaseDestinationsEndpoint,
@@ -102,23 +91,37 @@ class AppInjection {
           ),
         ),
 
-        // Repository
         ProxyProvider<DestinationRemoteDatasource, DestinationRepository>(
           update: (_, ds, __) => DestinationRepositoryImpl(ds),
         ),
 
-        // UseCase
         ProxyProvider<DestinationRepository, SearchDestinationsUsecase>(
           update: (_, repo, __) => SearchDestinationsUsecase(repo),
         ),
 
-    // NOTE:
-    // SearchNotifier (ChangeNotifier) tidak di-register di sini,
-    // tapi dibuat per-route saat build SearchScreen di AppRouter:
-    // ChangeNotifierProvider(
-    //   create: (_) => SearchNotifier(useCase: context.read<SearchDestinationsUsecase>(), mapper: mapper)
-    //     ..prefill(prefill)..setPopular(popularOnly),
-    //   child: const SearchScreen(),
-    // )
-  ];
+        // ==============================
+        // DETAIL CHAIN (Supabase REST)
+        // ==============================
+        Provider<DetailRemoteDatasource>(
+          create: (_) => DetailRemoteDatasourceImpl(
+            baseUrl: _supabaseDestinationsEndpoint,
+            apiKey: _supabaseAnonKey,
+          ),
+        ),
+
+        ProxyProvider<DetailRemoteDatasource, DetailRepository>(
+          update: (_, ds, __) => DetailRepositoryImpl(ds),
+        ),
+
+        ProxyProvider<DetailRepository, GetDestinationDetailUsecase>(
+          update: (_, repo, __) => GetDestinationDetailUsecase(repo),
+        ),
+
+        ChangeNotifierProxyProvider<GetDestinationDetailUsecase, DetailNotifier>(
+          create: (context) => DetailNotifier(
+            getDetail: context.read<GetDestinationDetailUsecase>(),
+          ),
+          update: (_, usecase, notifier) => notifier!..getDetail,
+        ),
+      ];
 }
