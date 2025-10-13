@@ -3,6 +3,8 @@ import 'package:boole_apps/features/auth/presentation/screens/login_screen/login
 import 'package:boole_apps/features/auth/presentation/screens/register_screen/register_screen.dart';
 import 'package:boole_apps/features/auth/presentation/screens/splash_screen/splash_screen.dart';
 import 'package:boole_apps/features/home/presentation/home_screen.dart';
+import 'package:boole_apps/features/destination/presentation/destination_screen.dart';
+import 'package:boole_apps/features/destination/presentation/providers/destination_provider.dart';
 import 'package:boole_apps/features/translate/presentation/translate_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -35,6 +37,9 @@ class AppRouter {
 
       case login:
         return MaterialPageRoute(builder: (_) => LoginScreen(), settings: settings);
+
+      case translate:
+        return MaterialPageRoute(builder: (_) => TranslatePage(), settings: settings);
 
       // ====== SEARCH ======
       case destination: {
@@ -83,9 +88,8 @@ class AppRouter {
             ),
           );
       case register:
-        return MaterialPageRoute(builder: (_) => RegisterScreen());
-      case translate:
-        return MaterialPageRoute(builder: (_) => const TranslatePage());
+        return MaterialPageRoute(builder: (_) => RegisterScreen(), settings: settings);
+
       default:
         return MaterialPageRoute(
           builder: (_) => const Scaffold(
