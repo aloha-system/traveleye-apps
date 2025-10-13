@@ -312,7 +312,7 @@ class _ResultList extends StatelessWidget {
           width: double.infinity,
           height: 180,
           onTap: () {
-            // TODO: Navigator.pushNamed(context, '/detail', arguments: it.id);
+            Navigator.pushNamed(context, '/detail', arguments: it.id);
           },
         );
       },
