@@ -88,8 +88,9 @@ class AppRouter {
             ),
           );
       case register:
-        return MaterialPageRoute(builder: (_) => RegisterScreen(), settings: settings);
-
+        return MaterialPageRoute(builder: (_) => RegisterScreen());
+      case translate:
+        return MaterialPageRoute(builder: (_) => const TranslatePage());
       default:
         return MaterialPageRoute(
           builder: (_) => const Scaffold(
