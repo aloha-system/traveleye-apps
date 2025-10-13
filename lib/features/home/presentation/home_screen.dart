@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+import 'package:flutter/material.dart';
+>>>>>>> 4c8e7ef (feat(translate): implement translation feature with speech recognition and text-to-speech capabilities)
 import 'package:boole_apps/app/app_router.dart';
 import 'package:boole_apps/core/widgets/app_search_bar.dart';
 import 'package:boole_apps/core/widgets/destination_card.dart';
@@ -145,19 +149,29 @@ class HomeScreen extends StatelessWidget {
                   icon: a['icon'] as IconData,
                   color: a['color'] as Color,
                   onTap: () {
+<<<<<<< HEAD
                     if ((a['title'] as String) == 'Destination') {
                       Navigator.pushNamed(
                         context,
                         AppRouter.destination,
                         arguments: {'popularOnly': true},
                       );
+=======
+                    if (a['title'] == 'Penerjemah') {
+                      Navigator.pushNamed(context, AppRouter.translate);
+>>>>>>> 4c8e7ef (feat(translate): implement translation feature with speech recognition and text-to-speech capabilities)
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text('${a['title']} - Coming Soon!'),
+<<<<<<< HEAD
                           backgroundColor: Theme.of(
                             context,
                           ).colorScheme.primary,
+=======
+                          backgroundColor:
+                              Theme.of(context).colorScheme.primary,
+>>>>>>> 4c8e7ef (feat(translate): implement translation feature with speech recognition and text-to-speech capabilities)
                         ),
                       );
                     }
