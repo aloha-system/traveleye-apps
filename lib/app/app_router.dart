@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:boole_apps/features/destination/domain/usecases/search_destinations_usecase.dart';
 import 'package:boole_apps/features/destination/domain/entities/destination.dart';
-import 'package:boole_apps/features/detail/presentation/screens/detail_screen.dart';
+import 'package:boole_apps/features/detail/presentation/detail_screen.dart';
 import 'package:boole_apps/features/detail/presentation/providers/detail_provider.dart';
 import 'package:boole_apps/features/detail/domain/usecases/get_destination_detail_usecase.dart';
 
