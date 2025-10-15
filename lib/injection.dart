@@ -2,6 +2,8 @@ import 'package:boole_apps/features/auth/domain/usecases/check_auth_status_useca
 import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
+import 'package:speech_to_text/speech_to_text.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 
 // ==== Feature Auth ====
 import 'features/auth/data/datasources/auth_remote_datasource.dart';
@@ -25,6 +27,18 @@ import 'features/detail/data/repositories/detail_repository_impl.dart';
 import 'features/detail/domain/repositories/detail_repository.dart';
 import 'features/detail/domain/usecases/get_destination_detail_usecase.dart';
 import 'features/detail/presentation/providers/detail_provider.dart';
+
+// ==== Feature Translation ====
+import 'package:translator/translator.dart';
+import 'features/translate/data/datasources/translation_remote_datasource.dart';
+import 'features/translate/data/datasources/translation_local_datasource.dart';
+import 'features/translate/data/datasources/speech_datasource.dart';
+import 'features/translate/data/repositories/translation_repository_impl.dart';
+import 'features/translate/domain/repositories/translation_repository.dart';
+import 'features/translate/domain/usecases/translate_text_usecase.dart';
+import 'features/translate/domain/usecases/speech_to_text_usecase.dart';
+import 'features/translate/domain/usecases/text_to_speech_usecase.dart';
+import 'features/translate/presentation/provider/translation_provider.dart';
 
 class AppInjection {
   // Supabase REST constants (sementara hardcoded, nanti bisa diganti ke .env)
@@ -122,6 +136,53 @@ class AppInjection {
             getDetail: context.read<GetDestinationDetailUsecase>(),
           ),
           update: (_, usecase, notifier) => notifier!..getDetail,
+        ),
+
+        // ==============================
+        // TRANSLATION CHAIN
+        // ==============================
+        // Speech Services
+        Provider<SpeechToText>(create: (_) => SpeechToText()),
+        Provider<FlutterTts>(create: (_) => FlutterTts()),
+        
+        // Translation Data Sources
+        Provider<GoogleTranslator>(create: (_) => GoogleTranslator()),
+        Provider<TranslationRemoteDatasource>(
+          create: (context) => TranslationRemoteDatasource(context.read<GoogleTranslator>()),
+        ),
+        Provider<TranslationLocalDatasource>(create: (_) => TranslationLocalDatasource()),
+        ProxyProvider2<SpeechToText, FlutterTts, SpeechDatasource>(
+          update: (_, speechToText, flutterTts, __) => SpeechDatasource(flutterTts, speechToText),
+        ),
+
+        ProxyProvider3<TranslationRemoteDatasource, TranslationLocalDatasource, SpeechDatasource, TranslationRepository>(
+          update: (_, remoteDatasource, localDatasource, speechDatasource, __) => 
+              TranslationRepositoryImpl(remoteDatasource, localDatasource, speechDatasource),
+        ),
+
+        ProxyProvider<TranslationRepository, TranslateTextUsecase>(
+          update: (_, repository, __) => TranslateTextUsecase(repository),
+        ),
+        ProxyProvider<TranslationRepository, SpeechToTextUsecase>(
+          update: (_, repository, __) => SpeechToTextUsecase(repository),
+        ),
+        ProxyProvider<TranslationRepository, TextToSpeechUsecase>(
+          update: (_, repository, __) => TextToSpeechUsecase(repository),
+        ),
+
+        ChangeNotifierProxyProvider3<
+          TranslateTextUsecase,
+          SpeechToTextUsecase,
+          TextToSpeechUsecase,
+          TranslationProvider
+        >(
+          create: (context) => TranslationProvider(
+            translateTextUsecase: context.read<TranslateTextUsecase>(),
+            speechToTextUsecase: context.read<SpeechToTextUsecase>(),
+            textToSpeechUsecase: context.read<TextToSpeechUsecase>(),
+          ),
+          update: (_, translateText, speechToText, textToSpeech, translationProvider) =>
+              translationProvider!,
         ),
       ];
 }

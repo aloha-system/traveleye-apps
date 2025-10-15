@@ -3,7 +3,6 @@ import 'package:boole_apps/app/app_router.dart';
 import 'package:boole_apps/core/widgets/app_search_bar.dart';
 import 'package:boole_apps/core/widgets/destination_card.dart';
 import 'package:boole_apps/features/home/presentation/widgets/quick_actions.dart';
-import 'package:flutter/material.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -146,7 +145,7 @@ class HomeScreen extends StatelessWidget {
                   icon: a['icon'] as IconData,
                   color: a['color'] as Color,
                   onTap: () {
-                    if (a['title'] == 'Penerjemah') {
+                    if (a['title'] == 'Translator') {
                       Navigator.pushNamed(context, AppRouter.translate);
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
