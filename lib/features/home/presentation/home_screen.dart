@@ -147,6 +147,8 @@ class HomeScreen extends StatelessWidget {
                   onTap: () {
                     if (a['title'] == 'Translator') {
                       Navigator.pushNamed(context, AppRouter.translate);
+                    } else if (a['title'] == 'Destination') {
+                      Navigator.pushNamed(context, AppRouter.destination, arguments: {'popularOnly': true});
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
