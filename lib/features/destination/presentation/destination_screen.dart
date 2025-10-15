@@ -274,11 +274,11 @@ class _ResultList extends StatelessWidget {
             children: [
               const Icon(Icons.error_outline, size: 48),
               const SizedBox(height: 12),
-              Text('Terjadi kesalahan', style: Theme.of(context).textTheme.titleMedium),
+              Text('An error occurred', style: Theme.of(context).textTheme.titleMedium),
               const SizedBox(height: 8),
               Text('${c.error}', textAlign: TextAlign.center),
               const SizedBox(height: 12),
-              FilledButton(onPressed: () => c.retry(), child: const Text('Coba lagi')),
+              FilledButton(onPressed: () => c.retry(), child: const Text('Try Again')),
             ],
           ),
         ),

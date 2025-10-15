@@ -1,7 +1,6 @@
 import 'package:boole_apps/features/translate/domain/usecases/translate_text_usecase.dart';
 import 'package:boole_apps/features/translate/domain/usecases/speech_to_text_usecase.dart';
 import 'package:boole_apps/features/translate/domain/usecases/text_to_speech_usecase.dart';
-import 'package:boole_apps/features/translate/domain/entities/translation_entity.dart';
 import 'package:boole_apps/features/translate/presentation/provider/translation_state.dart';
 import 'package:flutter/material.dart';
 
@@ -122,6 +121,25 @@ class TranslationProvider extends ChangeNotifier {
   // Set target language
   void setTargetLanguage(String language) {
     _state = _state.copyWith(targetLanguage: language);
+    notifyListeners();
+  }
+
+  // Update original text without triggering translation
+  void updateOriginalText(String text) {
+    _state = _state.copyWith(originalText: text);
+    notifyListeners();
+  }
+
+  // Get current original text (for controller sync)
+  String get originalText => _state.originalText;
+
+  // Clear translated text only
+  void clearTranslatedText() {
+    _state = _state.copyWith(
+      translatedText: '',
+      status: TranslationStatus.initial,
+      message: null,
+    );
     notifyListeners();
   }
 

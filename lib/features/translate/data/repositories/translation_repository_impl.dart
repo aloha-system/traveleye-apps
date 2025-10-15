@@ -1,14 +1,14 @@
-import 'package:boole_apps/features/translate/data/datasources/translation_mock_datasource.dart';
+import 'package:boole_apps/features/translate/data/datasources/translation_remote_datasource.dart';
 import 'package:boole_apps/features/translate/data/datasources/translation_local_datasource.dart';
-import 'package:boole_apps/features/translate/data/datasources/speech_mock_datasource.dart';
+import 'package:boole_apps/features/translate/data/datasources/speech_datasource.dart';
 import 'package:boole_apps/features/translate/data/models/translation_model.dart';
 import 'package:boole_apps/features/translate/domain/entities/translation_entity.dart';
 import 'package:boole_apps/features/translate/domain/repositories/translation_repository.dart';
 
 class TranslationRepositoryImpl implements TranslationRepository {
-  final TranslationMockDatasource remoteDatasource;
+  final TranslationRemoteDatasource remoteDatasource;
   final TranslationLocalDatasource localDatasource;
-  final SpeechMockDatasource speechDatasource;
+  final SpeechDatasource speechDatasource;
 
   const TranslationRepositoryImpl(
     this.remoteDatasource,
