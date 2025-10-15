@@ -1,22 +1,68 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:boole_apps/features/translate/presentation/provider/translation_provider.dart';
-import 'package:boole_apps/features/translate/presentation/provider/translation_state.dart';
+import 'dart:async';
 
-class TranslatePage extends StatelessWidget {
+class TranslatePage extends StatefulWidget {
   const TranslatePage({super.key});
+
+  @override
+  State<TranslatePage> createState() => _TranslatePageState();
+}
+
+class _TranslatePageState extends State<TranslatePage> {
+  late TextEditingController _textController;
+  Timer? _debounceTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    _textController = TextEditingController();
+  }
+
+  void _syncControllerWithProvider(TranslationProvider provider) {
+    if (_textController.text != provider.state.originalText) {
+      _textController.text = provider.state.originalText;
+    }
+  }
+
+  @override
+  void dispose() {
+    _textController.dispose();
+    _debounceTimer?.cancel();
+    super.dispose();
+  }
+
+  void _onTextChanged(String value, TranslationProvider provider) {
+    _debounceTimer?.cancel();
+
+    provider.updateOriginalText(value);
+
+    if (value.isNotEmpty) {
+      _debounceTimer = Timer(const Duration(milliseconds: 500), () {
+        provider.translateText(value);
+      });
+    } else {
+      // Clear translation immediately if text is empty
+      provider.clearTranslatedText();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Penerjemah'),
+        title: const Text('Translator'),
         backgroundColor: Theme.of(context).colorScheme.primary,
         foregroundColor: Colors.white,
         elevation: 0,
       ),
       body: Consumer<TranslationProvider>(
         builder: (context, provider, child) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            _syncControllerWithProvider(provider);
+          });
+          
           return SingleChildScrollView(
             padding: const EdgeInsets.all(16),
             child: Column(
@@ -55,20 +101,20 @@ class TranslatePage extends StatelessWidget {
           Expanded(
             child: _buildLanguageCard(
               context,
-              'English',
-              'en',
-              provider.state.sourceLanguage == 'en',
-              () => provider.setSourceLanguage('en'),
+              _getLanguageName(provider.state.sourceLanguage),
+              provider.state.sourceLanguage,
+              true, // Source language is always selected
+              () => provider.setSourceLanguage(provider.state.sourceLanguage),
             ),
           ),
           const SizedBox(width: 16),
           Expanded(
             child: _buildLanguageCard(
               context,
-              'Indonesia',
-              'id',
-              provider.state.targetLanguage == 'id',
-              () => provider.setTargetLanguage('id'),
+              _getLanguageName(provider.state.targetLanguage),
+              provider.state.targetLanguage,
+              true, // Target language is always selected
+              () => provider.setTargetLanguage(provider.state.targetLanguage),
             ),
           ),
         ],
@@ -129,7 +175,7 @@ class TranslatePage extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Teks Asli',
+          _getLanguageName(provider.state.sourceLanguage),
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
             fontWeight: FontWeight.bold,
           ),
@@ -144,15 +190,11 @@ class TranslatePage extends StatelessWidget {
             ),
           ),
           child: TextField(
-            controller: TextEditingController(text: provider.state.originalText),
-            onChanged: (value) {
-              if (value.isNotEmpty) {
-                provider.translateText(value);
-              }
-            },
+            controller: _textController,
+            onChanged: (value) => _onTextChanged(value, provider),
             maxLines: 4,
             decoration: InputDecoration(
-              hintText: 'Ketik atau ucapkan teks...',
+              hintText: _getInputHint(provider.state.sourceLanguage),
               border: InputBorder.none,
               contentPadding: const EdgeInsets.all(16),
               suffixIcon: provider.state.isListening
@@ -185,7 +227,10 @@ class TranslatePage extends StatelessWidget {
   Widget _buildSwapButton(BuildContext context, TranslationProvider provider) {
     return Center(
       child: GestureDetector(
-        onTap: () => provider.swapLanguages(),
+        onTap: () {
+          provider.swapLanguages();
+          _textController.text = provider.state.originalText;
+        },
         child: Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
@@ -207,7 +252,7 @@ class TranslatePage extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Terjemahan',
+          _getLanguageName(provider.state.targetLanguage),
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
             fontWeight: FontWeight.bold,
           ),
@@ -229,7 +274,7 @@ class TranslatePage extends StatelessWidget {
                 )
               : Text(
                   provider.state.translatedText.isEmpty
-                      ? 'Terjemahan akan muncul di sini...'
+                      ? _getOutputHint(provider.state.targetLanguage)
                       : provider.state.translatedText,
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     color: provider.state.translatedText.isEmpty
@@ -260,7 +305,7 @@ class TranslatePage extends StatelessWidget {
                     child: CircularProgressIndicator(strokeWidth: 2),
                   )
                 : const Icon(Icons.volume_up),
-            label: Text(provider.state.isSpeaking ? 'Speaking...' : 'Dengarkan'),
+            label: Text(provider.state.isSpeaking ? 'Speaking...' : 'Listen'),
             style: ElevatedButton.styleFrom(
               backgroundColor: Theme.of(context).colorScheme.secondary,
               foregroundColor: Colors.white,
@@ -273,9 +318,13 @@ class TranslatePage extends StatelessWidget {
           child: OutlinedButton.icon(
             onPressed: provider.state.originalText.isEmpty && provider.state.translatedText.isEmpty
                 ? null
-                : () => provider.clearText(),
+                : () {
+                    provider.clearText();
+                    _textController.clear();
+                    _debounceTimer?.cancel();
+                  },
             icon: const Icon(Icons.clear),
-            label: const Text('Hapus'),
+            label: const Text('Clear'),
             style: OutlinedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 12),
             ),
@@ -304,7 +353,7 @@ class TranslatePage extends StatelessWidget {
           const SizedBox(width: 12),
           Expanded(
             child: Text(
-              provider.state.message ?? 'Terjadi kesalahan',
+              provider.state.message ?? 'An error occurred',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: Theme.of(context).colorScheme.error,
               ),
@@ -313,5 +362,38 @@ class TranslatePage extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  String _getLanguageName(String languageCode) {
+    switch (languageCode) {
+      case 'en':
+        return 'English';
+      case 'id':
+        return 'Indonesian';
+      default:
+        return languageCode.toUpperCase();
+    }
+  }
+
+  String _getInputHint(String languageCode) {
+    switch (languageCode) {
+      case 'en':
+        return 'Type or speak text in English...';
+      case 'id':
+        return 'Ketik atau ucapkan teks dalam bahasa Indonesia...';
+      default:
+        return 'Type or speak text...';
+    }
+  }
+
+  String _getOutputHint(String languageCode) {
+    switch (languageCode) {
+      case 'en':
+        return 'Translation will appear here...';
+      case 'id':
+        return 'Terjemahan akan muncul di sini...';
+      default:
+        return 'Translation will appear here...';
+    }
   }
 }
