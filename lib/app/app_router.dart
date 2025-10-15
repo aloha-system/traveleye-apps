@@ -5,6 +5,7 @@ import 'package:boole_apps/features/auth/presentation/screens/splash_screen/spla
 import 'package:boole_apps/features/home/presentation/home_screen.dart';
 import 'package:boole_apps/features/destination/presentation/destination_screen.dart';
 import 'package:boole_apps/features/destination/presentation/providers/destination_provider.dart';
+import 'package:boole_apps/features/translate/presentation/translate_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:boole_apps/features/destination/domain/usecases/search_destinations_usecase.dart';
@@ -21,6 +22,7 @@ class AppRouter {
   static const String detail = '/detail';
   static const String login = '/login';
   static const String register = '/register';
+  static const String translate = '/translate';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -35,6 +37,9 @@ class AppRouter {
 
       case login:
         return MaterialPageRoute(builder: (_) => LoginScreen(), settings: settings);
+
+      case translate:
+        return MaterialPageRoute(builder: (_) => TranslatePage(), settings: settings);
 
       // ====== SEARCH ======
       case destination: {
@@ -83,8 +88,9 @@ class AppRouter {
             ),
           );
       case register:
-        return MaterialPageRoute(builder: (_) => RegisterScreen(), settings: settings);
-
+        return MaterialPageRoute(builder: (_) => RegisterScreen());
+      case translate:
+        return MaterialPageRoute(builder: (_) => const TranslatePage());
       default:
         return MaterialPageRoute(
           builder: (_) => const Scaffold(
