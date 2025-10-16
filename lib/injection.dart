@@ -1,3 +1,4 @@
+import 'package:boole_apps/env/env.dart';
 import 'package:boole_apps/features/auth/domain/usecases/check_auth_status_usecase.dart';
 import 'package:boole_apps/features/culture/data/datasource/culture_remote_datasource.dart';
 import 'package:boole_apps/features/culture/data/repositories/culture_repository_imp.dart';
@@ -50,7 +51,7 @@ class AppInjection {
   static const String _supabaseDestinationsEndpoint =
       'https://fowfuytbmgxpeogsaiwk.supabase.co/rest/v1/destinations';
   static const String _supabaseAnonKey =
-      'REDACTED';
+      Env.supabaseApiKey;
   static const String _supabaseCultureEndpoint =
       'https://fowfuytbmgxpeogsaiwk.supabase.co/rest/v1/culture';
 
