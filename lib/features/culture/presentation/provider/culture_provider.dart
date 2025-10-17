@@ -1,4 +1,4 @@
-import 'package:boole_apps/features/culture/domain/entities/culture_entity.dart';
+import 'package:boole_apps/features/culture/domain/entities/culture_entities/culture_entity.dart';
 import 'package:boole_apps/features/culture/domain/usecases/get_culture_usecase.dart';
 import 'package:boole_apps/features/culture/presentation/provider/culture_state.dart';
 import 'package:flutter/material.dart';

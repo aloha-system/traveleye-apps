@@ -1,5 +1,5 @@
 import 'package:boole_apps/features/culture/data/datasource/culture_remote_datasource.dart';
-import 'package:boole_apps/features/culture/domain/entities/culture_entity.dart';
+import 'package:boole_apps/features/culture/domain/entities/culture_entities/culture_entity.dart';
 import 'package:boole_apps/features/culture/domain/repositories/culture_repository.dart';
 
 class CultureRepositoryImp implements CultureRepository {

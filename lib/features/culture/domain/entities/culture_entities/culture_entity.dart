@@ -1,12 +1,12 @@
-import 'package:boole_apps/features/culture/domain/entities/culinary_customs_entity.dart';
-import 'package:boole_apps/features/culture/domain/entities/cultural_highlights_entity.dart';
-import 'package:boole_apps/features/culture/domain/entities/dress_code_entity.dart';
-import 'package:boole_apps/features/culture/domain/entities/festivals_entity.dart';
-import 'package:boole_apps/features/culture/domain/entities/greeting_phrases_entity.dart';
-import 'package:boole_apps/features/culture/domain/entities/religious_practices_entity.dart';
-import 'package:boole_apps/features/culture/domain/entities/social_etiquette_entity.dart';
-import 'package:boole_apps/features/culture/domain/entities/taboos_entity.dart';
-import 'package:boole_apps/features/culture/domain/entities/traditional_arts_entity.dart';
+import 'package:boole_apps/features/culture/domain/entities/culture_entities/culinary_customs_entity.dart';
+import 'package:boole_apps/features/culture/domain/entities/culture_entities/cultural_highlights_entity.dart';
+import 'package:boole_apps/features/culture/domain/entities/culture_entities/dress_code_entity.dart';
+import 'package:boole_apps/features/culture/domain/entities/culture_entities/festivals_entity.dart';
+import 'package:boole_apps/features/culture/domain/entities/culture_entities/greeting_phrases_entity.dart';
+import 'package:boole_apps/features/culture/domain/entities/culture_entities/religious_practices_entity.dart';
+import 'package:boole_apps/features/culture/domain/entities/culture_entities/social_etiquette_entity.dart';
+import 'package:boole_apps/features/culture/domain/entities/culture_entities/taboos_entity.dart';
+import 'package:boole_apps/features/culture/domain/entities/culture_entities/traditional_arts_entity.dart';
 
 class Culture {
   String id;

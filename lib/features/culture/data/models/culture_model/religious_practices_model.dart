@@ -1,4 +1,5 @@
-import 'package:boole_apps/features/culture/domain/entities/religious_practices_entity.dart';
+
+import 'package:boole_apps/features/culture/domain/entities/culture_entities/religious_practices_entity.dart';
 
 class ReligiousPracticesModel extends ReligiousPractices {
   ReligiousPracticesModel({

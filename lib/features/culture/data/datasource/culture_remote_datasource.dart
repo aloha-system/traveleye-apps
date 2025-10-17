@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:boole_apps/features/culture/data/models/culture_model.dart';
+import 'package:boole_apps/features/culture/data/models/culture_model/culture_model.dart';
 import 'package:http/http.dart' as http;
 
 class CultureRemoteDatasource {
