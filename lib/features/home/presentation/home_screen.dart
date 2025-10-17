@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:boole_apps/app/app_router.dart';
 import 'package:boole_apps/core/widgets/app_search_bar.dart';
 import 'package:boole_apps/core/widgets/destination_card.dart';
 import 'package:boole_apps/features/home/presentation/widgets/quick_actions.dart';
+import 'package:flutter/material.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -148,13 +148,20 @@ class HomeScreen extends StatelessWidget {
                     if (a['title'] == 'Translator') {
                       Navigator.pushNamed(context, AppRouter.translate);
                     } else if (a['title'] == 'Destination') {
-                      Navigator.pushNamed(context, AppRouter.destination, arguments: {'popularOnly': true});
+                      Navigator.pushNamed(
+                        context,
+                        AppRouter.destination,
+                        arguments: {'popularOnly': true},
+                      );
+                    } else if (a['title'] == 'Culture') {
+                      Navigator.pushNamed(context, AppRouter.culture);
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text('${a['title']} - Coming Soon!'),
-                          backgroundColor:
-                              Theme.of(context).colorScheme.primary,
+                          backgroundColor: Theme.of(
+                            context,
+                          ).colorScheme.primary,
                         ),
                       );
                     }
