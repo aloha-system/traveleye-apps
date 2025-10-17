@@ -121,3 +121,7 @@ app.*.symbols
 # Env
 .env
 env.g.dart
+
+# Firebase configuration files (sensitive)
+android/app/google-services.json
+ios/Runner/GoogleService-Info.plist
