@@ -2,6 +2,7 @@ import 'package:boole_apps/app/main_screen.dart';
 import 'package:boole_apps/features/auth/presentation/screens/login_screen/login_screen.dart';
 import 'package:boole_apps/features/auth/presentation/screens/register_screen/register_screen.dart';
 import 'package:boole_apps/features/auth/presentation/screens/splash_screen/splash_screen.dart';
+import 'package:boole_apps/features/culture/presentation/screens/culture_screen.dart';
 import 'package:boole_apps/features/home/presentation/home_screen.dart';
 import 'package:boole_apps/features/destination/presentation/destination_screen.dart';
 import 'package:boole_apps/features/destination/presentation/providers/destination_provider.dart';
@@ -23,79 +24,100 @@ class AppRouter {
   static const String login = '/login';
   static const String register = '/register';
   static const String translate = '/translate';
+  static const String culture = '/culture';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case splash:
-        return MaterialPageRoute(builder: (_) => SplashScreen(), settings: settings);
+        return MaterialPageRoute(
+          builder: (_) => SplashScreen(),
+          settings: settings,
+        );
 
       case main:
-        return MaterialPageRoute(builder: (_) => MainScreen(), settings: settings);
+        return MaterialPageRoute(
+          builder: (_) => MainScreen(),
+          settings: settings,
+        );
 
       case home:
-        return MaterialPageRoute(builder: (_) => HomeScreen(), settings: settings);
+        return MaterialPageRoute(
+          builder: (_) => HomeScreen(),
+          settings: settings,
+        );
 
       case login:
-        return MaterialPageRoute(builder: (_) => LoginScreen(), settings: settings);
+        return MaterialPageRoute(
+          builder: (_) => LoginScreen(),
+          settings: settings,
+        );
 
       case translate:
-        return MaterialPageRoute(builder: (_) => TranslatePage(), settings: settings);
+        return MaterialPageRoute(
+          builder: (_) => TranslatePage(),
+          settings: settings,
+        );
 
       // ====== SEARCH ======
-      case destination: {
-        // opsional: bisa kirim arguments saat pushNamed
-        // Navigator.pushNamed(context, AppRouter.search, arguments: {'prefill': 'Bali', 'popularOnly': true});
-        final args = (settings.arguments is Map) ? settings.arguments as Map : const {};
-        final String prefill = (args['prefill'] ?? '') as String;
-        final bool popularOnly = (args['popularOnly'] ?? false) as bool;
+      case destination:
+        {
+          // opsional: bisa kirim arguments saat pushNamed
+          // Navigator.pushNamed(context, AppRouter.search, arguments: {'prefill': 'Bali', 'popularOnly': true});
+          final args = (settings.arguments is Map)
+              ? settings.arguments as Map
+              : const {};
+          final String prefill = (args['prefill'] ?? '') as String;
+          final bool popularOnly = (args['popularOnly'] ?? false) as bool;
 
-        return MaterialPageRoute(
-          settings: settings,
-          builder: (context) {
-            // Ambil usecase dari DI
-            final usecase = context.read<SearchDestinationsUsecase>();
+          return MaterialPageRoute(
+            settings: settings,
+            builder: (context) {
+              // Ambil usecase dari DI
+              final usecase = context.read<SearchDestinationsUsecase>();
 
-            // Mapper dari entity → item UI
-            SearchItem mapper(Object e) {
-              final d = e as Destination;
-              return SearchItem(
-                id: d.id,
-                name: d.name,
-                location: '${d.city}, ${d.province}',
-                imageUrl: d.imageUrls.isNotEmpty ? d.imageUrls.first : '',
-                ratingText: d.rating.toStringAsFixed(1),
+              // Mapper dari entity → item UI
+              SearchItem mapper(Object e) {
+                final d = e as Destination;
+                return SearchItem(
+                  id: d.id,
+                  name: d.name,
+                  location: '${d.city}, ${d.province}',
+                  imageUrl: d.imageUrls.isNotEmpty ? d.imageUrls.first : '',
+                  ratingText: d.rating.toStringAsFixed(1),
+                );
+              }
+
+              return ChangeNotifierProvider<DestinationProvider>(
+                create: (_) =>
+                    DestinationProvider(useCase: usecase, mapper: mapper)
+                      ..prefill(prefill)
+                      ..setPopular(popularOnly),
+                child: const SearchScreen(),
               );
-            }
-
-            return ChangeNotifierProvider<DestinationProvider>(
-              create: (_) => DestinationProvider(useCase: usecase, mapper: mapper)
-                ..prefill(prefill)
-                ..setPopular(popularOnly),
-              child: const SearchScreen(),
-            );
-          },
-        );
-      }
+            },
+          );
+        }
 
       case '/detail':
-          final args = settings.arguments as String;
-          return MaterialPageRoute(
-            builder: (_) => ChangeNotifierProvider(
-              create: (context) => DetailNotifier(
-                getDetail: context.read<GetDestinationDetailUsecase>(),
-              )..fetch(args),
-              child: DetailScreen(id: args),
-            ),
-          );
+        final args = settings.arguments as String;
+        return MaterialPageRoute(
+          builder: (_) => ChangeNotifierProvider(
+            create: (context) => DetailNotifier(
+              getDetail: context.read<GetDestinationDetailUsecase>(),
+            )..fetch(args),
+            child: DetailScreen(id: args),
+          ),
+        );
       case register:
         return MaterialPageRoute(builder: (_) => RegisterScreen());
+      case culture:
+        return MaterialPageRoute(builder: (_) => const CultureScreen());
       case translate:
         return MaterialPageRoute(builder: (_) => const TranslatePage());
       default:
         return MaterialPageRoute(
-          builder: (_) => const Scaffold(
-            body: Center(child: Text('404 - Page not found')),
-          ),
+          builder: (_) =>
+              const Scaffold(body: Center(child: Text('404 - Page not found'))),
           settings: settings,
         );
     }
