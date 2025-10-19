@@ -64,4 +64,64 @@ class CultureRemoteDatasource {
       throw Exception('Unexpected error: $e.');
     }
   }
+
+  Future<CultureModel> fetchCultureById(String id) async {
+    try {
+      final uri = Uri.parse(baseUrl);
+
+      final Map<String, String> queryById = {'id': id};
+
+      final url = uri.replace(queryParameters: queryById);
+
+      final response = await http.get(
+        url,
+        headers: {
+          'apiKey': apiKey,
+          'Authorization': 'Bearer $apiKey',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      switch (response.statusCode) {
+        // ok
+        case 200:
+          final dynamic json = jsonDecode(response.body);
+
+          final CultureModel culture = CultureModel.fromJson(json);
+          return culture;
+
+        // bad request
+        case 400:
+          throw HttpException(
+            'Bad Request (400): Invalid request sent to server',
+          );
+
+        // unauthorized
+        case 401:
+          throw HttpException('Unauthorized (401): Invalid API key');
+
+        // not found
+        case 404:
+          throw HttpException('Not Found (404): Resource not found');
+
+        // server error
+        case 500:
+          throw HttpException('Server Error(500): Internal server error');
+
+        // default
+        default:
+          throw HttpException(
+            'Unexpected status code:  ${response.statusCode}',
+          );
+      }
+    } on SocketException {
+      throw Exception('No Internet connection');
+    } on FormatException {
+      throw Exception('Invalid repsonse format (not a valid JSON).');
+    } on HttpException catch (e) {
+      throw Exception('HTTP error: ${e.message}');
+    } catch (e) {
+      throw Exception('Unexpected error: $e');
+    }
+  }
 }
