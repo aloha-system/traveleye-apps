@@ -69,7 +69,7 @@ class CultureRemoteDatasource {
     try {
       final uri = Uri.parse(baseUrl);
 
-      final Map<String, String> queryById = {'id': id};
+      final Map<String, dynamic> queryById = {'id': 'eq.$id'};
 
       final url = uri.replace(queryParameters: queryById);
 
@@ -87,7 +87,7 @@ class CultureRemoteDatasource {
         case 200:
           final dynamic json = jsonDecode(response.body);
 
-          final CultureModel culture = CultureModel.fromJson(json);
+          final CultureModel culture = CultureModel.fromJson(json[0]);
           return culture;
 
         // bad request
