@@ -2,6 +2,7 @@ import 'package:boole_apps/app/main_screen.dart';
 import 'package:boole_apps/features/auth/presentation/screens/login_screen/login_screen.dart';
 import 'package:boole_apps/features/auth/presentation/screens/register_screen/register_screen.dart';
 import 'package:boole_apps/features/auth/presentation/screens/splash_screen/splash_screen.dart';
+import 'package:boole_apps/features/culture/presentation/screens/culture_detail_screen.dart';
 import 'package:boole_apps/features/culture/presentation/screens/culture_screen.dart';
 import 'package:boole_apps/features/home/presentation/home_screen.dart';
 import 'package:boole_apps/features/destination/presentation/destination_screen.dart';
@@ -31,6 +32,7 @@ class AppRouter {
   static const String mapRoute = '/mapRoute';
   static const String navigation = '/navigation';
   static const String culture = '/culture';
+  static const String cultureDetail = '/culture-detail';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -120,6 +122,9 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => RegisterScreen());
       case culture:
         return MaterialPageRoute(builder: (_) => const CultureScreen());
+      case cultureDetail:
+        final arg = settings.arguments as String;
+        return MaterialPageRoute(builder: (_) => CultureDetailScreen(id: arg));
 
       case navigation:
         return MaterialPageRoute(

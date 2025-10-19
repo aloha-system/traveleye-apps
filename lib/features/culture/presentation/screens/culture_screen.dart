@@ -1,3 +1,4 @@
+import 'package:boole_apps/app/app_router.dart';
 import 'package:boole_apps/core/widgets/destination_card.dart';
 import 'package:boole_apps/features/culture/presentation/provider/culture_provider.dart';
 import 'package:boole_apps/features/culture/presentation/provider/culture_state.dart';
@@ -119,7 +120,7 @@ class _ResultBodyState extends State<_ResultBody> {
         }
 
         // Empty state
-        if (value.culture == null) {
+        if (value.cultureList == null) {
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -142,10 +143,17 @@ class _ResultBodyState extends State<_ResultBody> {
           child: ListView.separated(
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
             separatorBuilder: (_, __) => const SizedBox(height: 12),
-            itemCount: value.culture!.length,
+            itemCount: value.cultureList!.length,
             itemBuilder: (context, index) {
-              final cultureItem = value.culture![index];
+              final cultureItem = value.cultureList![index];
               return DestinationCard(
+                onTap: () {
+                  Navigator.pushNamed(
+                    context,
+                    AppRouter.cultureDetail,
+                    arguments: cultureItem.id,
+                  );
+                },
                 name: cultureItem.province,
                 location: cultureItem.region,
                 imageUrl: cultureItem.imageUrl[1],
