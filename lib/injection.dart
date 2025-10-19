@@ -232,15 +232,21 @@ class AppInjection {
       update: (_, repository, __) => GetCultureUsecase(repository),
     ),
 
-    ProxyProvider<CultureRepository, GetCultureByIdUsecase>(update: 
-    (_, repository, __)=> GetCultureByIdUsecase(repository)),
+    ProxyProvider<CultureRepository, GetCultureByIdUsecase>(
+      update: (_, repository, __) => GetCultureByIdUsecase(repository),
+    ),
 
-    ChangeNotifierProxyProvider2<GetCultureUsecase,GetCultureByIdUsecase, CultureProvider>(
+    ChangeNotifierProxyProvider2<
+      GetCultureUsecase,
+      GetCultureByIdUsecase,
+      CultureProvider
+    >(
       create: (context) => CultureProvider(
         getCultureUsecase: context.read<GetCultureUsecase>(),
         getCultureByIdUsecase: context.read<GetCultureByIdUsecase>(),
       ),
-      update: (_, getCultureUsecase,getCultureByIdUsecase, provider) => provider!,
+      update: (_, getCultureUsecase, getCultureByIdUsecase, provider) =>
+          provider!,
     ),
 
     // ==============================
