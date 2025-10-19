@@ -16,4 +16,15 @@ class CultureRepositoryImp implements CultureRepository {
       throw Exception('Failed to fetch culture data: $e');
     }
   }
+
+  @override
+  Future<Culture> getDetailCultureById(String id) async {
+    try {
+      final model = await remoteDatasource.fetchCultureById(id);
+
+      return model.toEntity();
+    } catch (e) {
+      throw Exception('Failed to fetch culture by ID: $e');
+    }
+  }
 }
