@@ -46,6 +46,12 @@ import 'features/translate/domain/usecases/speech_to_text_usecase.dart';
 import 'features/translate/domain/usecases/text_to_speech_usecase.dart';
 import 'features/translate/presentation/provider/translation_provider.dart';
 
+// ==== Feature Navigation (Directions) ====
+import 'features/navigation/data/datasources/directions_remote_datasource.dart';
+import 'features/navigation/data/repositories/directions_repository_impl.dart';
+import 'features/navigation/domain/repositories/directions_repository.dart';
+import 'features/navigation/domain/usecases/get_route_usecase.dart';
+
 class AppInjection {
   // Supabase REST constants (sementara hardcoded, nanti bisa diganti ke .env)
   static const String _supabaseDestinationsEndpoint =
@@ -230,6 +236,19 @@ class AppInjection {
       create: (context) =>
           CultureProvider(getCultureUsecase: context.read<GetCultureUsecase>()),
       update: (_, useCase, provider) => provider!,
+    ),
+
+    // ==============================
+    // NAVIGATION / DIRECTIONS CHAIN
+    // ==============================
+    Provider<DirectionsRemoteDatasource>(
+      create: (_) => DirectionsRemoteDatasource(),
+    ),
+    ProxyProvider<DirectionsRemoteDatasource, DirectionsRepository>(
+      update: (_, remote, __) => DirectionsRepositoryImpl(remote),
+    ),
+    ProxyProvider<DirectionsRepository, GetRouteUsecase>(
+      update: (_, repo, __) => GetRouteUsecase(repo),
     ),
   ];
 }
