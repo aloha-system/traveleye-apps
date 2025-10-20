@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:boole_apps/core/widgets/destination_card.dart';
 import 'package:boole_apps/features/destination/presentation/providers/destination_provider.dart';
+import 'package:boole_apps/app/app_router.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -313,6 +314,23 @@ class _ResultList extends StatelessWidget {
           height: 180,
           onTap: () {
             Navigator.pushNamed(context, '/detail', arguments: it.id);
+          },
+          onLongPress: () {
+            if (it.latitude != null && it.longitude != null) {
+              Navigator.pushNamed(
+                context,
+                AppRouter.mapRoute,
+                arguments: {
+                  'lat': it.latitude!,
+                  'lng': it.longitude!,
+                  'title': it.name,
+                },
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Koordinat tidak tersedia untuk destinasi ini.')),
+              );
+            }
           },
         );
       },

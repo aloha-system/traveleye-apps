@@ -9,6 +9,7 @@ class DestinationCard extends StatelessWidget {
   final double width;
   final double height;
   final VoidCallback? onTap;
+  final VoidCallback? onLongPress;
 
   const DestinationCard({
     super.key,
@@ -19,6 +20,7 @@ class DestinationCard extends StatelessWidget {
     this.width = 160,
     this.height = 200,
     this.onTap,
+    this.onLongPress,
   });
 
   @override
@@ -28,6 +30,7 @@ class DestinationCard extends StatelessWidget {
       height: height,
       child: GestureDetector(
         onTap: onTap,
+        onLongPress: onLongPress,
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
