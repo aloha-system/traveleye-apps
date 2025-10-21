@@ -1,4 +1,5 @@
-import 'package:boole_apps/features/culture/domain/entities/festivals_entity.dart';
+
+import 'package:boole_apps/features/culture/domain/entities/culture_entities/festivals_entity.dart';
 
 class FestivalsModel extends Festivals {
   FestivalsModel({required super.major});

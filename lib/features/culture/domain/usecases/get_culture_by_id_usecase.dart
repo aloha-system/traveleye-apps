@@ -1,12 +1,11 @@
 import 'package:boole_apps/features/culture/domain/entities/culture_entities/culture_entity.dart';
 import 'package:boole_apps/features/culture/domain/repositories/culture_repository.dart';
 
-class GetCultureUsecase {
+class GetCultureByIdUsecase {
   final CultureRepository repository;
 
-  const GetCultureUsecase(this.repository);
-
-  Future<List<Culture>> call() async {
-    return await repository.getCulture();
+  const GetCultureByIdUsecase(this.repository);
+  Future<Culture> call(String id) async {
+    return await repository.getDetailCultureById(id);
   }
 }

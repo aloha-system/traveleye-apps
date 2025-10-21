@@ -1,4 +1,5 @@
-import 'package:boole_apps/features/culture/domain/entities/cultural_highlights_entity.dart';
+
+import 'package:boole_apps/features/culture/domain/entities/culture_entities/cultural_highlights_entity.dart';
 
 class CulturalHighlightsModel extends CulturalHighlights {
   CulturalHighlightsModel({required super.heritage, required super.landmarks});

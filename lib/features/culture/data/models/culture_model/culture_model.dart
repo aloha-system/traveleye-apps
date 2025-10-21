@@ -1,13 +1,13 @@
-import 'package:boole_apps/features/culture/data/models/culinary_customs_model.dart';
-import 'package:boole_apps/features/culture/data/models/cultural_highlights_model.dart';
-import 'package:boole_apps/features/culture/data/models/dress_code_model.dart';
-import 'package:boole_apps/features/culture/data/models/festivals_model.dart';
-import 'package:boole_apps/features/culture/data/models/greeting_phrases_model.dart';
-import 'package:boole_apps/features/culture/data/models/religious_practices_model.dart';
-import 'package:boole_apps/features/culture/data/models/social_etiquette_model.dart';
-import 'package:boole_apps/features/culture/data/models/taboos_model.dart';
-import 'package:boole_apps/features/culture/data/models/traditional_arts_model.dart';
-import 'package:boole_apps/features/culture/domain/entities/culture_entity.dart';
+import 'package:boole_apps/features/culture/data/models/culture_model/culinary_customs_model.dart';
+import 'package:boole_apps/features/culture/data/models/culture_model/cultural_highlights_model.dart';
+import 'package:boole_apps/features/culture/data/models/culture_model/dress_code_model.dart';
+import 'package:boole_apps/features/culture/data/models/culture_model/festivals_model.dart';
+import 'package:boole_apps/features/culture/data/models/culture_model/greeting_phrases_model.dart';
+import 'package:boole_apps/features/culture/data/models/culture_model/religious_practices_model.dart';
+import 'package:boole_apps/features/culture/data/models/culture_model/social_etiquette_model.dart';
+import 'package:boole_apps/features/culture/data/models/culture_model/taboos_model.dart';
+import 'package:boole_apps/features/culture/data/models/culture_model/traditional_arts_model.dart';
+import 'package:boole_apps/features/culture/domain/entities/culture_entities/culture_entity.dart';
 
 class CultureModel extends Culture {
   CultureModel({

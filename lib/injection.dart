@@ -3,6 +3,7 @@ import 'package:boole_apps/features/auth/domain/usecases/check_auth_status_useca
 import 'package:boole_apps/features/culture/data/datasource/culture_remote_datasource.dart';
 import 'package:boole_apps/features/culture/data/repositories/culture_repository_imp.dart';
 import 'package:boole_apps/features/culture/domain/repositories/culture_repository.dart';
+import 'package:boole_apps/features/culture/domain/usecases/get_culture_by_id_usecase.dart';
 import 'package:boole_apps/features/culture/domain/usecases/get_culture_usecase.dart';
 import 'package:boole_apps/features/culture/presentation/provider/culture_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
@@ -56,8 +57,7 @@ class AppInjection {
   // Supabase REST constants (sementara hardcoded, nanti bisa diganti ke .env)
   static const String _supabaseDestinationsEndpoint =
       'https://fowfuytbmgxpeogsaiwk.supabase.co/rest/v1/destinations';
-  static const String _supabaseAnonKey =
-      Env.supabaseApiKey;
+  static const String _supabaseAnonKey = Env.supabaseApiKey;
   static const String _supabaseCultureEndpoint =
       'https://fowfuytbmgxpeogsaiwk.supabase.co/rest/v1/culture';
 
@@ -232,10 +232,21 @@ class AppInjection {
       update: (_, repository, __) => GetCultureUsecase(repository),
     ),
 
-    ChangeNotifierProxyProvider<GetCultureUsecase, CultureProvider>(
-      create: (context) =>
-          CultureProvider(getCultureUsecase: context.read<GetCultureUsecase>()),
-      update: (_, useCase, provider) => provider!,
+    ProxyProvider<CultureRepository, GetCultureByIdUsecase>(
+      update: (_, repository, __) => GetCultureByIdUsecase(repository),
+    ),
+
+    ChangeNotifierProxyProvider2<
+      GetCultureUsecase,
+      GetCultureByIdUsecase,
+      CultureProvider
+    >(
+      create: (context) => CultureProvider(
+        getCultureUsecase: context.read<GetCultureUsecase>(),
+        getCultureByIdUsecase: context.read<GetCultureByIdUsecase>(),
+      ),
+      update: (_, getCultureUsecase, getCultureByIdUsecase, provider) =>
+          provider!,
     ),
 
     // ==============================

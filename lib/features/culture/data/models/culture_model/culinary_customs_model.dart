@@ -1,4 +1,5 @@
-import 'package:boole_apps/features/culture/domain/entities/culinary_customs_entity.dart';
+
+import 'package:boole_apps/features/culture/domain/entities/culture_entities/culinary_customs_entity.dart';
 
 class CulinaryCustomsModel extends CulinaryCustoms {
   CulinaryCustomsModel({required super.dishes, required super.flavors});

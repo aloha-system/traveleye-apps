@@ -1,4 +1,5 @@
-import 'package:boole_apps/features/culture/domain/entities/taboos_entity.dart';
+
+import 'package:boole_apps/features/culture/domain/entities/culture_entities/taboos_entity.dart';
 
 class TaboosModel extends Taboos {
   TaboosModel({required super.food, required super.publicDisplay});

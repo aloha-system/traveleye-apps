@@ -1,5 +1,5 @@
-import 'package:boole_apps/features/culture/data/models/common_model.dart';
-import 'package:boole_apps/features/culture/domain/entities/greeting_phrases_entity.dart';
+import 'package:boole_apps/features/culture/data/models/culture_model/common_model.dart';
+import 'package:boole_apps/features/culture/domain/entities/culture_entities/greeting_phrases_entity.dart';
 
 class GreetingPhrasesModel extends GreetingPhrases {
   GreetingPhrasesModel({required super.common, required super.formal});
