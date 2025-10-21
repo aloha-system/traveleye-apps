@@ -1,8 +1,7 @@
 import 'package:boole_apps/features/culture/presentation/provider/culture_provider.dart';
 import 'package:boole_apps/features/culture/presentation/provider/culture_state.dart';
-import 'package:carousel_slider/carousel_slider.dart';
+import 'package:boole_apps/features/culture/presentation/screens/widgets/culture_detail_appbar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class CultureDetailScreen extends StatefulWidget {
@@ -118,10 +117,38 @@ class _CultureDetailScreenState extends State<CultureDetailScreen> {
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 24),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      // Province Name
+                      _ProvinceNameWidget(),
+
+                      const SizedBox(height: 12),
+                      Divider(color: Theme.of(context).colorScheme.outline),
+
+                      // Cultural Description
+                      _CulturalDescriptionWidget(),
+
+                      _ContentSpacer(),
+
+                      // Languages
+                      _LanguagesWidget(),
+
+                      _ContentSpacer(),
+
+                      // Visitor Tips
                       Text(
-                        provider.cultureDetail!.province,
-                        style: Theme.of(context).textTheme.bodyLarge,
+                        'Visitor Tips: ',
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(fontWeight: FontWeight.bold),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        child: Wrap(
+                          spacing: 8,
+                          children: provider.cultureDetail!.visitorTips
+                              .map((tips) => Chip(label: Text(tips)))
+                              .toList(),
+                        ),
                       ),
                     ],
                   ),
@@ -135,93 +162,121 @@ class _CultureDetailScreenState extends State<CultureDetailScreen> {
   }
 }
 
-class CultureDetailAppBar extends StatelessWidget {
-  final List<String>? imageUrl;
-
-  const CultureDetailAppBar({super.key, required this.imageUrl});
-
+class _ContentSpacer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final List<String> images = (imageUrl == null || imageUrl!.isEmpty)
-        ? ['image fallback']
-        : imageUrl!;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 12),
+        Divider(
+          color: Theme.of(
+            context,
+          ).colorScheme.tertiary.withAlpha((0.3 * 255).round()),
+        ),
+      ],
+    );
+  }
+}
 
-    return SliverAppBar(
-      systemOverlayStyle: const SystemUiOverlayStyle(
-        statusBarBrightness: Brightness.dark,
-      ),
-      expandedHeight: 275.0,
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      elevation: 0.0,
-      pinned: true,
-      stretch: true,
+class _ProvinceNameWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final provider = context.watch<CultureProvider>();
 
-      // Body Appbar
-      flexibleSpace: FlexibleSpaceBar(
-        background: CarouselSlider(
-          items: images.map((url) {
-            return Image.network(
-              url,
-              fit: BoxFit.cover,
-              width: double.infinity,
-              errorBuilder: (context, error, stackTrace) =>
-                  const Center(child: Icon(Icons.broken_image, size: 60)),
-            );
-          }).toList(),
-          options: CarouselOptions(
-            autoPlay: true,
-            viewportFraction: 1.0,
-            enlargeCenterPage: false,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          provider.cultureDetail!.province,
+          style: Theme.of(
+            context,
+          ).textTheme.headlineLarge?.copyWith(fontWeight: FontWeight.bold),
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+        ),
+        Text(
+          '${provider.cultureDetail!.region} Region',
+          style: Theme.of(
+            context,
+          ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
+        ),
+      ],
+    );
+  }
+}
+
+class _CulturalDescriptionWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final provider = context.watch<CultureProvider>();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Cultural Description',
+          style: Theme.of(context).textTheme.titleMedium!.copyWith(
+            fontWeight: FontWeight.bold,
+            color: Theme.of(context).colorScheme.onSurface,
           ),
         ),
-        stretchModes: [StretchMode.blurBackground, StretchMode.zoomBackground],
-      ),
-
-      // Bottom Appbar
-      bottom: PreferredSize(
-        preferredSize: const Size.fromHeight(0.0),
-        child: Container(
-          height: 32.0,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surface,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(32.0),
-              topRight: Radius.circular(32.0),
-            ),
-          ),
-          child: Container(
-            width: 40.0,
-            height: 50,
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.outline,
-              borderRadius: BorderRadius.circular(100.0),
-            ),
+        const SizedBox(height: 8),
+        Text(
+          provider.cultureDetail!.description,
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+            fontWeight: FontWeight.bold,
+            color: Theme.of(context).colorScheme.tertiary,
           ),
         ),
-      ),
+      ],
+    );
+  }
+}
 
-      // Leading Appbar
-      // leadingWidth: 80.0,
-      // leading: Container(
-      //   margin: const EdgeInsets.only(left: 24),
-      //   child: ClipRRect(
-      //     borderRadius: BorderRadius.circular(56),
-      //     child: BackdropFilter(
-      //       filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-      //       child: Container(
-      //         height: 56,
-      //         width: 56,
-      //         alignment: Alignment.center,
-      //         decoration: BoxDecoration(
-      //           shape: BoxShape.circle,
-      //           color: Theme.of(context).colorScheme.surface,
-      //         ),
-      //         child: Icon(Icons.arrow_back_ios_new),
-      //       ),
-      //     ),
-      //   ),
-      // ),
+class _LanguagesWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final provider = context.watch<CultureProvider>();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Languages',
+          style: Theme.of(
+            context,
+          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 12),
+        Text(
+          'Local Languages :',
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+            fontWeight: FontWeight.bold,
+            color: Theme.of(context).colorScheme.tertiary,
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 6),
+          child: Wrap(
+            spacing: 8,
+            children: provider.cultureDetail!.localLanguages
+                .map((local) => Chip(label: Text(local)))
+                .toList(),
+          ),
+        ),
+        Text(
+          'Primary Languages :',
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+            fontWeight: FontWeight.bold,
+            color: Theme.of(context).colorScheme.tertiary,
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 6),
+          child: Chip(label: Text(provider.cultureDetail!.primaryLanguage)),
+        ),
+      ],
     );
   }
 }
