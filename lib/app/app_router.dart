@@ -4,6 +4,7 @@ import 'package:boole_apps/features/auth/presentation/screens/register_screen/re
 import 'package:boole_apps/features/auth/presentation/screens/splash_screen/splash_screen.dart';
 import 'package:boole_apps/features/culture/presentation/screens/culture_detail_screen.dart';
 import 'package:boole_apps/features/culture/presentation/screens/culture_screen.dart';
+import 'package:boole_apps/features/emergency/presentation/emergency_screen.dart';
 import 'package:boole_apps/features/home/presentation/home_screen.dart';
 import 'package:boole_apps/features/destination/presentation/destination_screen.dart';
 import 'package:boole_apps/features/destination/presentation/providers/destination_provider.dart';
@@ -33,6 +34,7 @@ class AppRouter {
   static const String navigation = '/navigation';
   static const String culture = '/culture';
   static const String cultureDetail = '/culture-detail';
+  static const String emergency = '/emergency';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -150,6 +152,12 @@ class AppRouter {
           ),
           settings: settings,
         );
+
+      // Emergency Screen Route
+      case emergency:
+        return MaterialPageRoute(builder: (_) => EmergencyScreen());
+
+      // Default Route
       default:
         return MaterialPageRoute(
           builder: (_) =>
