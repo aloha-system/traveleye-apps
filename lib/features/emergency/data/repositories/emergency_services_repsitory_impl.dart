@@ -40,6 +40,8 @@ class EmergencyRepositoryImpl implements EmergencyRepository {
   Future<List<EmergencyServiceEntity>> getPriorityServices() async {
     try {
       return await remoteDatasource.getPriorityServices();
+
+      // return data.map((model) => model.toEntity()).toList();
     } catch (e) {
       throw Exception('Repository: Failed to get priority services - $e');
     }

@@ -78,12 +78,13 @@ class EmergencyRemoteDatasourceImpl implements EmergencyRemoteDatasource {
   @override
   Future<List<EmergencyServiceModel>> searchServices(String query) async {
     try {
-      // Using RPC function for search
-      final response = await client.post(
-        Uri.parse('$baseUrl/rpc/search_emergency_services'),
-        headers: _headers,
-        body: json.encode({'search_term': query}),
+      final encodedQuery = Uri.encodeQueryComponent('%$query%');
+
+      final url = Uri.parse(
+        '$baseUrl/emergency_services?name=ilike.$encodedQuery',
       );
+
+      final response = await client.get(url, headers: _headers);
 
       if (response.statusCode == 200) {
         final List<dynamic> data = json.decode(response.body);
@@ -102,12 +103,13 @@ class EmergencyRemoteDatasourceImpl implements EmergencyRemoteDatasource {
   Future<List<EmergencyServiceModel>> getPriorityServices() async {
     try {
       // Using RPC function
-      final response = await client.post(
-        Uri.parse('$baseUrl/rpc/get_priority_services'),
+      final response = await client.get(
+        Uri.parse('$baseUrl/emergency_services?priority=lt.5'),
         headers: _headers,
       );
 
       if (response.statusCode == 200) {
+        print(response.statusCode);
         final List<dynamic> data = json.decode(response.body);
         return data
             .map((json) => EmergencyServiceModel.fromJson(json))

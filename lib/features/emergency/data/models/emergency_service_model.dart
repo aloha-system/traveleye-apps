@@ -70,4 +70,18 @@ class EmergencyServiceModel extends EmergencyServiceEntity {
       'tags': tags,
     };
   }
+
+  EmergencyServiceEntity toEntity() {
+    return EmergencyServiceEntity(
+      id: id,
+      name: name,
+      category: category,
+      coverageLevel: coverageLevel,
+      languages: languages,
+      priority: priority,
+      sourceName: sourceName,
+      numbers: numbers,
+      tags: tags,
+    );
+  }
 }
