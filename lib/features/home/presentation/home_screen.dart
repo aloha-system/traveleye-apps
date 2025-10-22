@@ -254,12 +254,7 @@ class HomeScreen extends StatelessWidget {
   Widget _buildEmergencySection(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text('Emergency Services - Coming Soon!'),
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
-        );
+        Navigator.pushNamed(context, AppRouter.emergency);
       },
       child: Container(
         padding: const EdgeInsets.all(20),
