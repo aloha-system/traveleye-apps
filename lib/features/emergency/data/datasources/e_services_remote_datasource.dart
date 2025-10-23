@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:boole_apps/features/emergency/data/models/emergency_service_model.dart';
 import 'package:http/http.dart' as http;
 
@@ -35,16 +36,46 @@ class EmergencyRemoteDatasourceImpl implements EmergencyRemoteDatasource {
         headers: _headers,
       );
 
-      if (response.statusCode == 200) {
-        final List<dynamic> data = json.decode(response.body);
-        return data
-            .map((json) => EmergencyServiceModel.fromJson(json))
-            .toList();
-      } else {
-        throw Exception('Failed to load services: ${response.statusCode}');
+      switch (response.statusCode) {
+        // ok
+        case 200:
+          final List<dynamic> data = json.decode(response.body);
+          return data
+              .map((json) => EmergencyServiceModel.fromJson(json))
+              .toList();
+
+        // bad request
+        case 400:
+          throw HttpException(
+            'Bad Request (400): Invalid request sent to server.',
+          );
+
+        // unauthorized
+        case 401:
+          throw HttpException('Unauthorized (401): Invalid API key or token.');
+
+        // not found
+        case 404:
+          throw HttpException('Not Found (404): Resource not found.');
+
+        // server error
+        case 500:
+          throw HttpException('Server Error (500): Internal server error.');
+
+        // default
+        default:
+          throw HttpException(
+            'Failed to load Services: Unexpected status code: ${response.statusCode}',
+          );
       }
+    } on SocketException {
+      throw Exception('No Internet connection.');
+    } on FormatException {
+      throw Exception('Invalid response format (not a valid JSON).');
+    } on HttpException catch (e) {
+      throw Exception('HTTP error: ${e.message}');
     } catch (e) {
-      throw Exception('Failed to fetch services: $e');
+      throw Exception('Unexpected error: $e.');
     }
   }
 
@@ -60,18 +91,45 @@ class EmergencyRemoteDatasourceImpl implements EmergencyRemoteDatasource {
         headers: _headers,
       );
 
-      if (response.statusCode == 200) {
-        final List<dynamic> data = json.decode(response.body);
-        return data
-            .map((json) => EmergencyServiceModel.fromJson(json))
-            .toList();
-      } else {
-        throw Exception(
-          'Failed to load services by category: ${response.statusCode}',
-        );
+      switch (response.statusCode) {
+        // ok
+        case 200:
+          final List<dynamic> data = json.decode(response.body);
+          return data
+              .map((json) => EmergencyServiceModel.fromJson(json))
+              .toList();
+        // bad request
+        case 400:
+          throw HttpException(
+            'Bad Request (400): Invalid request sent to server.',
+          );
+
+        // unauthorized
+        case 401:
+          throw HttpException('Unauthorized (401): Invalid API key or token.');
+
+        // not found
+        case 404:
+          throw HttpException('Not Found (404): Resource not found.');
+
+        // server error
+        case 500:
+          throw HttpException('Server Error (500): Internal server error.');
+
+        // default
+        default:
+          throw HttpException(
+            'Failed to load Service by Category: Unexpected status code: ${response.statusCode}',
+          );
       }
+    } on SocketException {
+      throw Exception('No Internet connection.');
+    } on FormatException {
+      throw Exception('Invalid response format (not a valid JSON).');
+    } on HttpException catch (e) {
+      throw Exception('HTTP error: ${e.message}');
     } catch (e) {
-      throw Exception('Failed to fetch services by category: $e');
+      throw Exception('Unexpected error: $e.');
     }
   }
 
@@ -86,16 +144,46 @@ class EmergencyRemoteDatasourceImpl implements EmergencyRemoteDatasource {
 
       final response = await client.get(url, headers: _headers);
 
-      if (response.statusCode == 200) {
-        final List<dynamic> data = json.decode(response.body);
-        return data
-            .map((json) => EmergencyServiceModel.fromJson(json))
-            .toList();
-      } else {
-        throw Exception('Failed to search services: ${response.statusCode}');
+      switch (response.statusCode) {
+        // ok
+        case 200:
+          final List<dynamic> data = json.decode(response.body);
+          return data
+              .map((json) => EmergencyServiceModel.fromJson(json))
+              .toList();
+
+        // bad request
+        case 400:
+          throw HttpException(
+            'Bad Request (400): Invalid request sent to server.',
+          );
+
+        // unauthorized
+        case 401:
+          throw HttpException('Unauthorized (401): Invalid API key or token.');
+
+        // not found
+        case 404:
+          throw HttpException('Not Found (404): Resource not found.');
+
+        // server error
+        case 500:
+          throw HttpException('Server Error (500): Internal server error.');
+
+        // default
+        default:
+          throw HttpException(
+            'Failed to load Search Service: Unexpected status code ${response.statusCode}',
+          );
       }
+    } on SocketException {
+      throw Exception('No Internet connection.');
+    } on FormatException {
+      throw Exception('Invalid response format (not a valid JSON).');
+    } on HttpException catch (e) {
+      throw Exception('HTTP error: ${e.message}');
     } catch (e) {
-      throw Exception('Failed to search services: $e');
+      throw Exception('Unexpected error: $e');
     }
   }
 
@@ -108,18 +196,46 @@ class EmergencyRemoteDatasourceImpl implements EmergencyRemoteDatasource {
         headers: _headers,
       );
 
-      if (response.statusCode == 200) {
-        final List<dynamic> data = json.decode(response.body);
-        return data
-            .map((json) => EmergencyServiceModel.fromJson(json))
-            .toList();
-      } else {
-        throw Exception(
-          'Failed to load priority services: ${response.statusCode}',
-        );
+      switch (response.statusCode) {
+        // ok
+        case 200:
+          final List<dynamic> data = json.decode(response.body);
+          return data
+              .map((json) => EmergencyServiceModel.fromJson(json))
+              .toList();
+
+        // bad request
+        case 400:
+          throw HttpException(
+            'Bad Request (400): Invalid request sent to server.',
+          );
+
+        // unauthorized
+        case 401:
+          throw HttpException('Unauthorized (401): Invalid API key or token.');
+
+        // not found
+        case 404:
+          throw HttpException('Not Found (404): Resource not found.');
+
+        // server error
+        case 500:
+          throw HttpException('Server Error (500): Internal server error.');
+
+        // default
+        default:
+          throw HttpException(
+            'Failed to load Priority Services: Unexpected status code ${response.statusCode}',
+          );
       }
+    } on SocketException {
+      throw Exception('No Internet connection.');
+    } on FormatException {
+      throw Exception('Invalid response format (not a valid JSON).');
+    } on HttpException catch (e) {
+      throw Exception('HTTP error: ${e.message}');
     } catch (e) {
-      throw Exception('Failed to fetch priority services: $e');
+      throw Exception('Unexpected error: $e');
     }
   }
 
@@ -131,17 +247,47 @@ class EmergencyRemoteDatasourceImpl implements EmergencyRemoteDatasource {
         headers: _headers,
       );
 
-      if (response.statusCode == 200) {
-        final List<dynamic> data = json.decode(response.body);
-        if (data.isNotEmpty) {
-          return EmergencyServiceModel.fromJson(data.first);
-        }
-        return null;
-      } else {
-        throw Exception('Failed to load service by id: ${response.statusCode}');
+      switch (response.statusCode) {
+        // ok
+        case 200:
+          final List<dynamic> data = json.decode(response.body);
+          if (data.isNotEmpty) {
+            return EmergencyServiceModel.fromJson(data.first);
+          }
+          return null;
+
+        // bad request
+        case 400:
+          throw HttpException(
+            'Bad Request (400): Invalid request sent to server.',
+          );
+
+        // unauthorized
+        case 401:
+          throw HttpException('Unauthorized (401): Invalid API key or token.');
+
+        // not found
+        case 404:
+          throw HttpException('Not Found (404): Resource not found.');
+
+        // server error
+        case 500:
+          throw HttpException('Server Error (500): Internal server error.');
+
+        // default
+        default:
+          throw HttpException(
+            'Failed to load Service By ID: Unexpected status code: ${response.statusCode}',
+          );
       }
+    } on SocketException {
+      throw Exception('No Internet connection.');
+    } on FormatException {
+      throw Exception('Invalid response format (not a valid JSON).');
+    } on HttpException catch (e) {
+      throw Exception('HTTP error: ${e.message}');
     } catch (e) {
-      throw Exception('Failed to fetch service by id: $e');
+      throw Exception('Unexpected error: $e.');
     }
   }
 }
