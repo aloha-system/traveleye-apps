@@ -1,4 +1,3 @@
-
 import 'package:boole_apps/features/emergency/domain/entities/emergency_number_entity.dart';
 
 class EmergencyNumberModel extends EmergencyNumberEntity {

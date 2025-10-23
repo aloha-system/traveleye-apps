@@ -1,4 +1,3 @@
-
 import 'package:boole_apps/features/culture/domain/entities/culture_entities/dress_code_entity.dart';
 
 class DressCodeModel extends DressCode {

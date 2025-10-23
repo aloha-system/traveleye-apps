@@ -1,4 +1,5 @@
 // ==== Feature Emergency ====
+import 'package:boole_apps/features/culture/domain/usecases/search_culture_usecase.dart';
 import 'package:boole_apps/features/emergency/data/datasources/e_services_remote_datasource.dart';
 import 'package:boole_apps/features/emergency/data/repositories/emergency_services_repsitory_impl.dart';
 import 'package:boole_apps/features/emergency/domain/repositories/emergency_repository.dart';
@@ -251,17 +252,29 @@ class AppInjection {
       update: (_, repository, __) => GetCultureByIdUsecase(repository),
     ),
 
-    ChangeNotifierProxyProvider2<
+    ProxyProvider<CultureRepository, SearchCultureUsecase>(
+      update: (_, repository, __) => SearchCultureUsecase(repository),
+    ),
+
+    ChangeNotifierProxyProvider3<
       GetCultureUsecase,
       GetCultureByIdUsecase,
+      SearchCultureUsecase,
       CultureProvider
     >(
       create: (context) => CultureProvider(
         getCultureUsecase: context.read<GetCultureUsecase>(),
         getCultureByIdUsecase: context.read<GetCultureByIdUsecase>(),
+        searchCultureUsecase: context.read<SearchCultureUsecase>(),
       ),
-      update: (_, getCultureUsecase, getCultureByIdUsecase, provider) =>
-          provider!,
+      update:
+          (
+            _,
+            getCultureUsecase,
+            getCultureByIdUsecase,
+            searchCultureUsecase,
+            provider,
+          ) => provider!,
     ),
 
     // ==============================

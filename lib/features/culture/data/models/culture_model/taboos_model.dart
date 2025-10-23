@@ -1,4 +1,3 @@
-
 import 'package:boole_apps/features/culture/domain/entities/culture_entities/taboos_entity.dart';
 
 class TaboosModel extends Taboos {

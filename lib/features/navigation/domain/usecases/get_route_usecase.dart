@@ -12,10 +12,10 @@ class GetRouteUsecase {
     required double destLng,
     String mode = 'driving',
   }) => _repo.getRoute(
-        originLat: originLat,
-        originLng: originLng,
-        destLat: destLat,
-        destLng: destLng,
-        mode: mode,
-      );
+    originLat: originLat,
+    originLng: originLng,
+    destLat: destLat,
+    destLng: destLng,
+    mode: mode,
+  );
 }

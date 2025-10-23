@@ -1,16 +1,19 @@
 import 'package:boole_apps/features/culture/domain/entities/culture_entities/culture_entity.dart';
 import 'package:boole_apps/features/culture/domain/usecases/get_culture_by_id_usecase.dart';
 import 'package:boole_apps/features/culture/domain/usecases/get_culture_usecase.dart';
+import 'package:boole_apps/features/culture/domain/usecases/search_culture_usecase.dart';
 import 'package:boole_apps/features/culture/presentation/provider/culture_state.dart';
 import 'package:flutter/material.dart';
 
 class CultureProvider extends ChangeNotifier {
   final GetCultureUsecase getCultureUsecase;
   final GetCultureByIdUsecase getCultureByIdUsecase;
+  final SearchCultureUsecase searchCultureUsecase;
 
   CultureProvider({
     required this.getCultureUsecase,
     required this.getCultureByIdUsecase,
+    required this.searchCultureUsecase,
   });
 
   CultureState _state = CultureState();
@@ -29,6 +32,24 @@ class CultureProvider extends ChangeNotifier {
 
     try {
       _cultureList = await getCultureUsecase.call();
+      _state = _state.copyWith(status: CultureStatus.success);
+    } catch (e) {
+      _state = _state.copyWith(
+        status: CultureStatus.error,
+        message: e.toString(),
+      );
+    } finally {
+      notifyListeners();
+    }
+  }
+
+  // search culture trigger method
+  Future<void> searchCulture(String query) async {
+    _state = _state.copyWith(status: CultureStatus.loading);
+    notifyListeners();
+
+    try {
+      _cultureList = await searchCultureUsecase.call(query);
       _state = _state.copyWith(status: CultureStatus.success);
     } catch (e) {
       _state = _state.copyWith(
@@ -66,5 +87,4 @@ class CultureProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
-  
 }

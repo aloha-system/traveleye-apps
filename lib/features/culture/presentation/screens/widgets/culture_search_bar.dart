@@ -1,15 +1,16 @@
+import 'package:boole_apps/features/culture/presentation/provider/culture_provider.dart';
 import 'package:boole_apps/features/emergency/presentation/provider/emergency_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class EmergencySearchBar extends StatefulWidget {
-  const EmergencySearchBar({super.key});
+class CultureSearchBar extends StatefulWidget {
+  const CultureSearchBar({super.key});
 
   @override
-  State<EmergencySearchBar> createState() => _EmergencySearchBarState();
+  State<CultureSearchBar> createState() => _EmergencySearchBarState();
 }
 
-class _EmergencySearchBarState extends State<EmergencySearchBar> {
+class _EmergencySearchBarState extends State<CultureSearchBar> {
   final TextEditingController _searchController = TextEditingController();
 
   @override
@@ -18,12 +19,12 @@ class _EmergencySearchBarState extends State<EmergencySearchBar> {
     super.dispose();
   }
 
-  void _onSearchChanged(String value) {
+  void _onSearchChanged(String query) {
     // Debounce search untuk performa lebih baik
     Future.delayed(const Duration(milliseconds: 500), () {
       if (!mounted) return;
-      if (_searchController.text == value) {
-        context.read<EmergencyProvider>().searchServices(value);
+      if (_searchController.text == query) {
+        context.read<CultureProvider>().searchCulture(query);
       }
     });
   }
@@ -40,7 +41,7 @@ class _EmergencySearchBarState extends State<EmergencySearchBar> {
       child: TextField(
         controller: _searchController,
         decoration: InputDecoration(
-          hintText: 'Search emergency services...',
+          hintText: 'Search cultures...',
           hintStyle: TextStyle(color: Colors.grey[400]),
           prefixIcon: const Icon(Icons.search, color: Colors.grey),
           suffixIcon: _searchController.text.isNotEmpty

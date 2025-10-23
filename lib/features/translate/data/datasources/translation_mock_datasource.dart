@@ -9,7 +9,7 @@ class TranslationMockDatasource {
     } else if (from == 'id' && to == 'en') {
       return _translateIdToEn(text);
     }
-    
+
     return text;
   }
 

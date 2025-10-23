@@ -1,4 +1,3 @@
-
 import 'package:boole_apps/features/culture/domain/entities/culture_entities/culinary_customs_entity.dart';
 
 class CulinaryCustomsModel extends CulinaryCustoms {

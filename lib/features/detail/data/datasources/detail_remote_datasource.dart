@@ -31,11 +31,13 @@ class DetailRemoteDatasourceImpl implements DetailRemoteDatasource {
       throw Exception('DetailRemoteDatasource: id kosong');
     }
 
-    final uri = Uri.parse(baseUrl).replace(queryParameters: <String, String>{
-      'id': 'eq.$id',
-      'select': '*',
-      'limit': '1',
-    });
+    final uri = Uri.parse(baseUrl).replace(
+      queryParameters: <String, String>{
+        'id': 'eq.$id',
+        'select': '*',
+        'limit': '1',
+      },
+    );
 
     final res = await _client
         .get(
@@ -50,9 +52,7 @@ class DetailRemoteDatasourceImpl implements DetailRemoteDatasource {
         .timeout(const Duration(seconds: 20));
 
     if (res.statusCode != 200) {
-      throw Exception(
-        'Supabase detail error ${res.statusCode}: ${res.body}',
-      );
+      throw Exception('Supabase detail error ${res.statusCode}: ${res.body}');
     }
 
     // Supabase PostgREST mengembalikan array
@@ -61,13 +61,12 @@ class DetailRemoteDatasourceImpl implements DetailRemoteDatasource {
       throw DetailNotFoundException(id);
     }
 
-    final Map<String, dynamic> json =
-        (decoded.first as Map).cast<String, dynamic>();
+    final Map<String, dynamic> json = (decoded.first as Map)
+        .cast<String, dynamic>();
 
     return DestinationDetailModel.fromJson(json);
   }
 }
-
 
 class DetailNotFoundException implements Exception {
   final String id;

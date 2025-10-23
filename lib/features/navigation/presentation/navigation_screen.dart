@@ -14,8 +14,10 @@ class NavigationScreen extends StatefulWidget {
 }
 
 class _NavigationScreenState extends State<NavigationScreen> {
-  GoogleMapController? _controller;
-  CameraPosition _initial = const CameraPosition(target: LatLng(-6.2, 106.8), zoom: 11); // Jakarta fallback
+  CameraPosition _initial = const CameraPosition(
+    target: LatLng(-6.2, 106.8),
+    zoom: 11,
+  ); // Jakarta fallback
   bool _loading = true;
   String? _error;
   final TextEditingController _searchCtrl = TextEditingController();
@@ -44,20 +46,16 @@ class _NavigationScreenState extends State<NavigationScreen> {
     try {
       final usecase = context.read<SearchDestinationsUsecase>();
       final entities = await usecase(
-        SearchParams(
-          keyword: query,
-          popularOnly: false,
-          nearbyOnly: false,
-        ),
+        SearchParams(keyword: query, popularOnly: false, nearbyOnly: false),
       );
       setState(() {
         _results = entities.cast<Destination>();
       });
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Search failed: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Search failed: $e')));
       }
     } finally {
       if (mounted) {
@@ -96,9 +94,14 @@ class _NavigationScreenState extends State<NavigationScreen> {
         });
         return;
       }
-      final pos = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
+      final pos = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.best,
+      );
       setState(() {
-        _initial = CameraPosition(target: LatLng(pos.latitude, pos.longitude), zoom: 14);
+        _initial = CameraPosition(
+          target: LatLng(pos.latitude, pos.longitude),
+          zoom: 14,
+        );
         _loading = false;
       });
     } catch (e) {
@@ -136,12 +139,11 @@ class _NavigationScreenState extends State<NavigationScreen> {
                   FilledButton(
                     onPressed: () => _runSearch(_searchCtrl.text),
                     child: const Icon(Icons.search),
-                  )
+                  ),
                 ],
               ),
             ),
-            if (_searching)
-              const LinearProgressIndicator(minHeight: 2),
+            if (_searching) const LinearProgressIndicator(minHeight: 2),
             if (_results.isNotEmpty && _selected == null)
               Expanded(
                 child: ListView.separated(
@@ -168,7 +170,11 @@ class _NavigationScreenState extends State<NavigationScreen> {
                           );
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Selected destination has no coordinates')),
+                            const SnackBar(
+                              content: Text(
+                                'Selected destination has no coordinates',
+                              ),
+                            ),
                           );
                         }
                       },
@@ -184,11 +190,12 @@ class _NavigationScreenState extends State<NavigationScreen> {
                       initialCameraPosition: _initial,
                       myLocationEnabled: true,
                       myLocationButtonEnabled: true,
-                      onMapCreated: (c) => _controller = c,
                     ),
                     if (_loading)
                       const Positioned.fill(
-                        child: IgnorePointer(child: Center(child: CircularProgressIndicator())),
+                        child: IgnorePointer(
+                          child: Center(child: CircularProgressIndicator()),
+                        ),
                       ),
                     if (_error != null && !_loading)
                       Positioned(
@@ -200,7 +207,10 @@ class _NavigationScreenState extends State<NavigationScreen> {
                           borderRadius: BorderRadius.circular(12),
                           child: Padding(
                             padding: const EdgeInsets.all(12.0),
-                            child: Text(_error!, style: const TextStyle(color: Colors.white)),
+                            child: Text(
+                              _error!,
+                              style: const TextStyle(color: Colors.white),
+                            ),
                           ),
                         ),
                       ),

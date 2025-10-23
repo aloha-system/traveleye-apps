@@ -11,20 +11,20 @@ class SpeechDatasource {
   // Check and request microphone permission
   Future<bool> _checkMicrophonePermission() async {
     final status = await Permission.microphone.status;
-    
+
     if (status.isGranted) {
       return true;
     }
-    
+
     if (status.isDenied) {
       final result = await Permission.microphone.request();
       return result.isGranted;
     }
-    
+
     if (status.isPermanentlyDenied) {
       return false;
     }
-    
+
     return false;
   }
 
@@ -42,7 +42,9 @@ class SpeechDatasource {
       // Check microphone permission first
       final hasPermission = await _checkMicrophonePermission();
       if (!hasPermission) {
-        throw Exception('Microphone permission denied. Please enable microphone access in settings.');
+        throw Exception(
+          'Microphone permission denied. Please enable microphone access in settings.',
+        );
       }
 
       // Initialize speech recognition
@@ -54,27 +56,29 @@ class SpeechDatasource {
       // Check available locales and find best match
       final locales = await _speechToText.locales();
       final targetLocale = _getLanguageCode(language);
-      
+
       if (locales.isEmpty) {
-        throw Exception('No speech recognition locales available on this device');
+        throw Exception(
+          'No speech recognition locales available on this device',
+        );
       }
-      
+
       // Find exact match first
-      var selectedLocale = locales.where(
-        (locale) => locale.localeId == targetLocale,
-      ).firstOrNull;
-      
+      var selectedLocale = locales
+          .where((locale) => locale.localeId == targetLocale)
+          .firstOrNull;
+
       if (selectedLocale == null) {
         final languageCode = targetLocale.split('_')[0];
-        selectedLocale = locales.where(
-          (locale) => locale.localeId.startsWith(languageCode),
-        ).firstOrNull;
+        selectedLocale = locales
+            .where((locale) => locale.localeId.startsWith(languageCode))
+            .firstOrNull;
       }
-      
+
       selectedLocale ??= locales.first;
 
       String recognizedText = '';
-      
+
       await _speechToText.listen(
         onResult: (result) {
           recognizedText = result.recognizedWords;
@@ -82,8 +86,7 @@ class SpeechDatasource {
         localeId: selectedLocale.localeId,
         listenFor: const Duration(seconds: 30),
         pauseFor: const Duration(seconds: 3),
-        onSoundLevelChange: (level) {
-        },
+        onSoundLevelChange: (level) {},
       );
 
       // Wait for speech recognition to complete
@@ -130,7 +133,7 @@ class SpeechDatasource {
       if (!available) {
         return [];
       }
-      
+
       final locales = await _speechToText.locales();
       return locales.map((locale) => locale.localeId).toList();
     } catch (e) {

@@ -1,4 +1,3 @@
-
 import 'package:boole_apps/features/culture/domain/entities/culture_entities/festivals_entity.dart';
 
 class FestivalsModel extends Festivals {
