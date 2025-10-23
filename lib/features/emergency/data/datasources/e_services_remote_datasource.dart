@@ -109,7 +109,6 @@ class EmergencyRemoteDatasourceImpl implements EmergencyRemoteDatasource {
       );
 
       if (response.statusCode == 200) {
-        print(response.statusCode);
         final List<dynamic> data = json.decode(response.body);
         return data
             .map((json) => EmergencyServiceModel.fromJson(json))

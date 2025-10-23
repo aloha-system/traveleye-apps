@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class EmergencySearchBar extends StatefulWidget {
-  const EmergencySearchBar({Key? key}) : super(key: key);
+  const EmergencySearchBar({super.key});
 
   @override
   State<EmergencySearchBar> createState() => _EmergencySearchBarState();

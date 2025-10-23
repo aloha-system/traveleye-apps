@@ -4,11 +4,11 @@ import 'package:boole_apps/features/destination/domain/repositories/destination_
 /// Parameter pencarian destinasi wisata
 class SearchParams {
   final String keyword;
-  final bool popularOnly;   // filter rating >= 4.7
-  final bool nearbyOnly;    // TODO: bisa dipakai untuk filter jarak (belum aktif)
-  final int? maxBudget;     // filter harga tiket
+  final bool popularOnly; // filter rating >= 4.7
+  final bool nearbyOnly;
+  final int? maxBudget; // filter harga tiket
   final DateTime? startDate; // opsional (misal untuk event-based)
-  final DateTime? endDate;   // opsional
+  final DateTime? endDate; // opsional
 
   const SearchParams({
     this.keyword = '',

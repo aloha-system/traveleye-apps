@@ -28,23 +28,6 @@ class AuthProvider extends ChangeNotifier {
   UserEntity? _user;
   UserEntity? get user => _user;
 
-  void _emit(AuthState newState) {
-    _state = newState;
-    notifyListeners();
-  }
-
-  // check auth status trigger method
-  Future<void> _checkAuthStatus() async {
-    final user = await checkAuthStatusUsecase();
-
-    if (user != null) {
-      _state = state.copyWith(status: AuthStatus.success, user: user);
-    } else {
-      _state = state.copyWith(status: AuthStatus.initial);
-    }
-    notifyListeners();
-  }
-
   // create account trigger method
   Future<void> createAccount(String email, String password, String name) async {
     _state = _state.copyWith(status: AuthStatus.loading);
