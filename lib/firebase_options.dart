@@ -65,5 +65,4 @@ class DefaultFirebaseOptions {
     storageBucket: 'boole-mobile-application.firebasestorage.app',
     iosBundleId: 'com.example.booleApps',
   );
-
 }

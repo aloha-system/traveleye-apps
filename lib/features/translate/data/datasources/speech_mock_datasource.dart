@@ -14,7 +14,7 @@ class SpeechMockDatasource {
     } else if (language == 'id') {
       return 'Halo, apa kabar hari ini?';
     }
-    
+
     return 'Speech recognition not available';
   }
 }

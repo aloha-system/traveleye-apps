@@ -1,4 +1,3 @@
-
 import 'package:boole_apps/features/culture/domain/entities/culture_entities/social_etiquette_entity.dart';
 
 class SocialEtiquetteModel extends SocialEtiquette {

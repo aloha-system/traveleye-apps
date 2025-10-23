@@ -15,56 +15,62 @@ class DetailScreen extends StatelessWidget {
       body: c.loading
           ? const Center(child: CircularProgressIndicator())
           : c.error != null
-              ? Center(child: Text('Error: ${c.error}'))
-              : c.data == null
-                  ? const Center(child: Text('No Data'))
-                  : SingleChildScrollView(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(12),
-                            child: Image.network(
-                              c.data!.imageUrls.first,
-                              height: 200,
-                              width: double.infinity,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-                          Text(c.data!.name,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headlineSmall
-                                  ?.copyWith(fontWeight: FontWeight.bold)),
-                          Text('${c.data!.city}, ${c.data!.province}',
-                              style: Theme.of(context).textTheme.bodyMedium),
-                          const SizedBox(height: 8),
-                          Row(
-                            children: [
-                              Icon(Icons.star,
-                                  color: Colors.amber[700], size: 20),
-                              const SizedBox(width: 4),
-                              Text('${c.data!.rating}'),
-                            ],
-                          ),
-                          const SizedBox(height: 16),
-                          Text(c.data!.description,
-                              style: Theme.of(context).textTheme.bodyMedium),
-                          const SizedBox(height: 24),
-                          Text('Facility:',
-                              style: Theme.of(context).textTheme.titleMedium),
-                          const SizedBox(height: 8),
-                          Wrap(
-                            spacing: 8,
-                            children: c.data!.facilities
-                                .map((f) => Chip(label: Text(f)))
-                                .toList(),
-                          ),
-                        ],
-                      ),
+          ? Center(child: Text('Error: ${c.error}'))
+          : c.data == null
+          ? const Center(child: Text('No Data'))
+          : SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: Image.network(
+                      c.data!.imageUrls.first,
+                      height: 200,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
                     ),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    c.data!.name,
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    '${c.data!.city}, ${c.data!.province}',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Icon(Icons.star, color: Colors.amber[700], size: 20),
+                      const SizedBox(width: 4),
+                      Text('${c.data!.rating}'),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    c.data!.description,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                  const SizedBox(height: 24),
+                  Text(
+                    'Facility:',
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  const SizedBox(height: 8),
+                  Wrap(
+                    spacing: 8,
+                    children: c.data!.facilities
+                        .map((f) => Chip(label: Text(f)))
+                        .toList(),
+                  ),
+                ],
+              ),
+            ),
     );
   }
 }

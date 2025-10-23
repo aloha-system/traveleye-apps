@@ -66,5 +66,4 @@ class CultureProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
-  
 }

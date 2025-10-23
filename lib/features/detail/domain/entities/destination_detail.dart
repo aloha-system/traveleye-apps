@@ -1,5 +1,5 @@
 class DestinationDetail {
-  final String id;                 // uuid
+  final String id; // uuid
   final String name;
   final String description;
   final String city;

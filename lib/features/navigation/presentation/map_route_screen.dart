@@ -31,10 +31,10 @@ class _MapRouteScreenState extends State<MapRouteScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<RouteProvider>().loadRoute(
-            destLat: widget.destinationLat,
-            destLng: widget.destinationLng,
-            mode: _mode,
-          );
+        destLat: widget.destinationLat,
+        destLng: widget.destinationLng,
+        mode: _mode,
+      );
     });
   }
 
@@ -46,7 +46,10 @@ class _MapRouteScreenState extends State<MapRouteScreen> {
 
     if (c.origin != null) {
       _markers = {
-        Marker(markerId: const MarkerId('origin'), position: LatLng(c.origin!.latitude, c.origin!.longitude)),
+        Marker(
+          markerId: const MarkerId('origin'),
+          position: LatLng(c.origin!.latitude, c.origin!.longitude),
+        ),
         Marker(markerId: const MarkerId('destination'), position: dest),
       };
     } else {
@@ -57,9 +60,9 @@ class _MapRouteScreenState extends State<MapRouteScreen> {
 
     _polylines = {};
     if (c.route != null) {
-      final points = _decodePolyline(c.route!.encodedPolyline)
-          .map((e) => LatLng(e.$1, e.$2))
-          .toList(growable: false);
+      final points = _decodePolyline(
+        c.route!.encodedPolyline,
+      ).map((e) => LatLng(e.$1, e.$2)).toList(growable: false);
 
       _polylines = {
         Polyline(
@@ -67,12 +70,15 @@ class _MapRouteScreenState extends State<MapRouteScreen> {
           points: points,
           color: Theme.of(context).colorScheme.primary,
           width: 5,
-        )
+        ),
       };
     }
 
     final initial = c.origin != null
-        ? CameraPosition(target: LatLng(c.origin!.latitude, c.origin!.longitude), zoom: 13)
+        ? CameraPosition(
+            target: LatLng(c.origin!.latitude, c.origin!.longitude),
+            zoom: 13,
+          )
         : CameraPosition(target: dest, zoom: 13);
 
     return Scaffold(
@@ -87,10 +93,10 @@ class _MapRouteScreenState extends State<MapRouteScreen> {
               if (m == _mode) return;
               setState(() => _mode = m);
               context.read<RouteProvider>().loadRoute(
-                    destLat: widget.destinationLat,
-                    destLng: widget.destinationLng,
-                    mode: _mode,
-                  );
+                destLat: widget.destinationLat,
+                destLng: widget.destinationLng,
+                mode: _mode,
+              );
             },
             itemBuilder: (_) => const [
               PopupMenuItem(value: 'driving', child: Text('Driving')),
@@ -103,9 +109,14 @@ class _MapRouteScreenState extends State<MapRouteScreen> {
             Padding(
               padding: const EdgeInsets.only(right: 12),
               child: Center(
-                child: Text(_formatDistanceDuration(c.route!.distanceMeters, c.route!.durationSeconds)),
+                child: Text(
+                  _formatDistanceDuration(
+                    c.route!.distanceMeters,
+                    c.route!.durationSeconds,
+                  ),
+                ),
               ),
-            )
+            ),
         ],
       ),
       body: Stack(
@@ -141,7 +152,7 @@ class _MapRouteScreenState extends State<MapRouteScreen> {
                   ),
                 ),
               ),
-            )
+            ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -162,8 +173,14 @@ class _MapRouteScreenState extends State<MapRouteScreen> {
   }
 
   void _fitToBounds(LatLng a, LatLng b) {
-    final southWest = LatLng(math.min(a.latitude, b.latitude), math.min(a.longitude, b.longitude));
-    final northEast = LatLng(math.max(a.latitude, b.latitude), math.max(a.longitude, b.longitude));
+    final southWest = LatLng(
+      math.min(a.latitude, b.latitude),
+      math.min(a.longitude, b.longitude),
+    );
+    final northEast = LatLng(
+      math.max(a.latitude, b.latitude),
+      math.max(a.longitude, b.longitude),
+    );
     final bounds = LatLngBounds(southwest: southWest, northeast: northEast);
     _controller?.animateCamera(CameraUpdate.newLatLngBounds(bounds, 50));
   }
