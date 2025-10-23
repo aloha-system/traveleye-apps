@@ -5,4 +5,7 @@ abstract class CultureRepository {
 
   // get culture by id
   Future<Culture> getDetailCultureById(String id);
+
+  // search culture by query
+  Future<List<Culture>> searchCulture(String query);
 }

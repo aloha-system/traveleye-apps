@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:boole_apps/features/culture/data/models/culture_model/culture_model.dart';
 import 'package:http/http.dart' as http;
 
@@ -120,6 +121,40 @@ class CultureRemoteDatasource {
       throw Exception('Invalid repsonse format (not a valid JSON).');
     } on HttpException catch (e) {
       throw Exception('HTTP error: ${e.message}');
+    } catch (e) {
+      throw Exception('Unexpected error: $e');
+    }
+  }
+
+  Future<List<CultureModel>> searchCultures(String query) async {
+    try {
+      final encodedQuery = Uri.encodeQueryComponent('%$query%');
+
+      final url = Uri.parse('$baseUrl?province=ilike.$encodedQuery');
+
+      final response = await http.get(
+        url,
+        headers: {
+          'apiKey': apiKey,
+          'Authorization': 'Bearer $apiKey',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      switch (response.statusCode) {
+        // ok
+        case 200:
+          final List<dynamic> jsonList = jsonDecode(response.body);
+
+          final List<CultureModel> cultures = jsonList
+              .map((json) => CultureModel.fromJson(json))
+              .toList();
+          return cultures;
+        default:
+          throw HttpException(
+            'Failed to Search Cultures: Unexpected status code${response.statusCode}',
+          );
+      }
     } catch (e) {
       throw Exception('Unexpected error: $e');
     }
