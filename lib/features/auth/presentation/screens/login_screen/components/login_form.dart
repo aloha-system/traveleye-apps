@@ -11,6 +11,7 @@ class LoginForm extends StatefulWidget {
 
   @override
   State<LoginForm> createState() => _LoginFormState();
+  State<LoginForm> createState() => _LoginFormState();
 }
 
 class _LoginFormState extends State<LoginForm>
@@ -46,6 +47,9 @@ class _LoginFormState extends State<LoginForm>
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+    _emailFocusNode.dispose();
+    _passwordFocusNode.dispose();
+    _animationController.dispose();
     _emailFocusNode.dispose();
     _passwordFocusNode.dispose();
     _animationController.dispose();
