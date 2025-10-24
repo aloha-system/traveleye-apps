@@ -11,7 +11,12 @@ class AuthRepositoryImp implements AuthRepository {
   Future<UserEntity> signIn(String email, String password) async {
     final user = await remoteDatasource.signIn(email, password);
 
-    return UserEntity(uid: user.uid, email: user.email ?? '');
+    return UserEntity(
+      uid: user.uid,
+      email: user.email ?? '',
+      displayName: user.displayName,
+      photoUrl: user.photoURL,
+    );
   }
 
   @override
@@ -56,5 +61,16 @@ class AuthRepositoryImp implements AuthRepository {
       );
     }
     return null;
+  }
+
+  @override
+  Future<UserEntity> signInWithGoogle() async {
+    final user = await remoteDatasource.signInWithGoogle();
+    return UserEntity(
+      uid: user.uid,
+      email: user.email ?? '',
+      displayName: user.displayName,
+      photoUrl: user.photoURL,
+    );
   }
 }

@@ -2,6 +2,8 @@ import 'package:boole_apps/app/app_router.dart';
 import 'package:boole_apps/features/auth/presentation/screens/login_screen/components/login_form.dart';
 import 'package:boole_apps/features/auth/presentation/widgets/socal_card.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:boole_apps/features/auth/presentation/provider/auth_provider.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -42,13 +44,41 @@ class LoginScreen extends StatelessWidget {
                     children: [
                       SocalCard(
                         icon: "assets/icons/google-icon.svg",
-                        press: () {},
+                        press: () async {
+                          final auth = context.read<AuthProvider>();
+                          await auth.signInWithGoogle();
+                          if (!context.mounted) return;
+                          if (auth.state.isSuccess) {
+                            Navigator.pushNamedAndRemoveUntil(
+                              context,
+                              AppRouter.home,
+                              (_) => false,
+                            );
+                          } else if (auth.state.isError) {
+                            final msg =
+                                auth.state.message ?? 'Google sign-in failed';
+                            ScaffoldMessenger.of(
+                              context,
+                            ).showSnackBar(SnackBar(content: Text(msg)));
+                          }
+                        },
                       ),
                       SocalCard(
                         icon: "assets/icons/facebook-2.svg",
-                        press: () {},
+                        press: () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Coming soon!')),
+                          );
+                        },
                       ),
-                      SocalCard(icon: "assets/icons/twitter.svg", press: () {}),
+                      SocalCard(
+                        icon: "assets/icons/twitter.svg",
+                        press: () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Coming soon!')),
+                          );
+                        },
+                      ),
                     ],
                   ),
                   const SizedBox(height: 20),

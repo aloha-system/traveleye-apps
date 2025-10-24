@@ -3,6 +3,7 @@ import 'package:boole_apps/features/auth/domain/usecases/check_auth_status_useca
 import 'package:boole_apps/features/auth/domain/usecases/create_account_usecase.dart';
 import 'package:boole_apps/features/auth/domain/usecases/reset_password_usecase.dart';
 import 'package:boole_apps/features/auth/domain/usecases/sign_in_usecase.dart';
+import 'package:boole_apps/features/auth/domain/usecases/sign_in_with_google_usecase.dart';
 import 'package:boole_apps/features/auth/domain/usecases/sign_out_usecase.dart';
 import 'package:boole_apps/features/auth/presentation/provider/auth_state.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +14,7 @@ class AuthProvider extends ChangeNotifier {
   final SignOutUsecase signOutUsecase;
   final ResetPasswordUsecase resetPasswordUsecase;
   final CheckAuthStatusUsecase checkAuthStatusUsecase;
+  final SignInWithGoogleUsecase signInWithGoogleUsecase;
 
   AuthProvider({
     required this.createAccountUsecase,
@@ -20,6 +22,7 @@ class AuthProvider extends ChangeNotifier {
     required this.signOutUsecase,
     required this.resetPasswordUsecase,
     required this.checkAuthStatusUsecase,
+    required this.signInWithGoogleUsecase,
   });
 
   AuthState _state = AuthState();
@@ -39,6 +42,20 @@ class AuthProvider extends ChangeNotifier {
         password: password,
         name: name,
       );
+      _state = _state.copyWith(status: AuthStatus.success);
+    } catch (e) {
+      _state = _state.copyWith(status: AuthStatus.error, message: e.toString());
+    } finally {
+      notifyListeners();
+    }
+  }
+
+  // sign in with Google
+  Future<void> signInWithGoogle() async {
+    _state = _state.copyWith(status: AuthStatus.loading);
+    notifyListeners();
+    try {
+      _user = await signInWithGoogleUsecase.call();
       _state = _state.copyWith(status: AuthStatus.success);
     } catch (e) {
       _state = _state.copyWith(status: AuthStatus.error, message: e.toString());
@@ -70,7 +87,7 @@ class AuthProvider extends ChangeNotifier {
     try {
       await signOutUsecase.call();
       _user = null;
-      _state = _state.copyWith(status: AuthStatus.success);
+      _state = _state.copyWith(status: AuthStatus.initial);
     } catch (e) {
       _state = _state.copyWith(status: AuthStatus.error, message: e.toString());
     } finally {
@@ -85,6 +102,26 @@ class AuthProvider extends ChangeNotifier {
     try {
       await resetPasswordUsecase.call(email: email);
       _state = _state.copyWith(status: AuthStatus.success);
+    } catch (e) {
+      _state = _state.copyWith(status: AuthStatus.error, message: e.toString());
+    } finally {
+      notifyListeners();
+    }
+  }
+
+  // check auth status and update state
+  Future<void> checkAuthStatus() async {
+    _state = _state.copyWith(status: AuthStatus.loading);
+    notifyListeners();
+    try {
+      final currentUser = await checkAuthStatusUsecase.call();
+      if (currentUser != null) {
+        _user = currentUser;
+        _state = _state.copyWith(status: AuthStatus.success, user: currentUser);
+      } else {
+        _user = null;
+        _state = _state.copyWith(status: AuthStatus.initial, user: null);
+      }
     } catch (e) {
       _state = _state.copyWith(status: AuthStatus.error, message: e.toString());
     } finally {

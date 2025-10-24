@@ -21,6 +21,7 @@ class SignFormState extends State<LoginForm> {
   final List<String?> errors = [];
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool _loginSubmitting = false;
 
   String? _lastErrorMessageShown;
 
@@ -148,10 +149,53 @@ class SignFormState extends State<LoginForm> {
 
               // forgot password
               GestureDetector(
-                // onTap: () => Navigator.pushNamed(
-                //   context,
-                //   ForgotPasswordScreen.routeName,
-                // ),
+                onTap: () async {
+                  final controller = TextEditingController(
+                    text: _emailController.text,
+                  );
+                  final email = await showDialog<String>(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: const Text('Reset Password'),
+                        content: TextField(
+                          controller: controller,
+                          keyboardType: TextInputType.emailAddress,
+                          decoration: const InputDecoration(
+                            labelText: 'Email',
+                          ),
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: const Text('Cancel'),
+                          ),
+                          TextButton(
+                            onPressed: () => Navigator.pop(
+                              context,
+                              controller.text.trim(),
+                            ),
+                            child: const Text('Send'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                  if (!mounted) return;
+                  if (email != null && email.isNotEmpty) {
+                    await context.read<AuthProvider>().resetPassword(email);
+                    if (!mounted) return;
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: const Text(
+                          'Password reset email sent. Please check your inbox.',
+                        ),
+                        backgroundColor:
+                            Theme.of(context).colorScheme.primary,
+                      ),
+                    );
+                  }
+                },
                 child: const Text(
                   "Forgot Password",
                   style: TextStyle(decoration: TextDecoration.underline),
@@ -218,16 +262,18 @@ class SignFormState extends State<LoginForm> {
                   });
 
                   _lastErrorMessageShown = msg;
+                  _loginSubmitting = false;
                 }
               }
               // auth state success
               else if (auth.state.status == AuthStatus.success &&
                   context.mounted) {
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  // auth state succes return to home screen
-                  Navigator.pushNamed(context, AppRouter.home);
-                  // todo: add token for argument if possible
-                });
+                if (_loginSubmitting) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    Navigator.pushNamed(context, AppRouter.home);
+                  });
+                  _loginSubmitting = false;
+                }
               }
 
               // login button checked with auth state loading
@@ -239,6 +285,7 @@ class SignFormState extends State<LoginForm> {
                           _formKey.currentState!.save();
                           KeyboardUtil.hideKeyboard(context);
 
+                          _loginSubmitting = true;
                           context.read<AuthProvider>().signIn(
                             _emailController.text,
                             _passwordController.text,
