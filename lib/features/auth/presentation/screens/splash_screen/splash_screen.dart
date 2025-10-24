@@ -23,8 +23,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: 0);
-    Future.microtask(() {
-      if (!mounted) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       final authProvider = context.read<AuthProvider>();
 
       authProvider.checkAuthStatus();
@@ -35,7 +34,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
         if (state.isSuccess) {
           // Briefly show splash before navigating to Home if already authenticated
-          await Future.delayed(const Duration(milliseconds: 800));
+          // await Future.delayed(const Duration(milliseconds: 800));
           if (!mounted || _navigated) return;
           _navigated = true;
           Navigator.pushReplacementNamed(context, AppRouter.home);
@@ -45,6 +44,29 @@ class _SplashScreenState extends State<SplashScreen> {
 
       authProvider.addListener(_authListener!);
     });
+
+    // Future.microtask(() {
+    //   if (!mounted) return;
+    //   final authProvider = context.read<AuthProvider>();
+
+    //   authProvider.checkAuthStatus();
+
+    //   _authListener = () async {
+    //     final state = authProvider.state;
+    //     if (_navigated) return;
+
+    //     if (state.isSuccess) {
+    //       // Briefly show splash before navigating to Home if already authenticated
+    //       // await Future.delayed(const Duration(milliseconds: 800));
+    //       if (!mounted || _navigated) return;
+    //       _navigated = true;
+    //       Navigator.pushReplacementNamed(context, AppRouter.home);
+    //     }
+    //     // Do not auto-navigate on initial; let user press Next to go to Login
+    //   };
+
+    //   authProvider.addListener(_authListener!);
+    // });
 
     currentPage = widget.index;
   }
@@ -138,36 +160,36 @@ class _SplashScreenState extends State<SplashScreen> {
                         ),
                       ),
                       const Spacer(flex: 3),
-                      if (currentPage == splashData.length - 1)
-                        ElevatedButton(
-                          onPressed: () async {
-                            final auth = context.read<AuthProvider>();
-                            if (auth.state.isSuccess) {
-                              if (!_navigated) {
-                                _navigated = true;
-                                Navigator.pushReplacementNamed(
-                                    context, AppRouter.home);
-                              }
-                            } else {
-                              Navigator.pushNamed(context, AppRouter.login);
+                      // if (currentPage == splashData.length - 1)
+                      ElevatedButton(
+                        onPressed: () async {
+                          final auth = context.read<AuthProvider>();
+                          if (auth.state.isSuccess) {
+                            if (!_navigated) {
+                              _navigated = true;
+                              Navigator.pushReplacementNamed(
+                                context,
+                                AppRouter.home,
+                              );
                             }
-                          },
-                          child: ConstrainedBox(
-                            constraints: const BoxConstraints(
-                              minWidth: 150,
-                              maxWidth: 250,
-                            ),
-                            child: Center(
-                              child: Text(
-                                "Get Started",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleLarge
-                                    ?.copyWith(fontWeight: FontWeight.bold),
-                              ),
+                          } else {
+                            Navigator.pushNamed(context, AppRouter.login);
+                          }
+                        },
+                        child: ConstrainedBox(
+                          constraints: const BoxConstraints(
+                            minWidth: 150,
+                            maxWidth: 250,
+                          ),
+                          child: Center(
+                            child: Text(
+                              "Get Started",
+                              style: Theme.of(context).textTheme.titleLarge
+                                  ?.copyWith(fontWeight: FontWeight.bold),
                             ),
                           ),
                         ),
+                      ),
                       const Spacer(),
                     ],
                   ),
