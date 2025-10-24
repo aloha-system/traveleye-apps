@@ -18,18 +18,19 @@ class _SplashScreenState extends State<SplashScreen> {
   VoidCallback? _authListener;
   bool _navigated = false;
   late final PageController _pageController;
+  AuthProvider? _authProvider;
 
   @override
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: 0);
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final authProvider = context.read<AuthProvider>();
+      _authProvider = context.read<AuthProvider>();
 
-      authProvider.checkAuthStatus();
+      _authProvider!.checkAuthStatus();
 
       _authListener = () async {
-        final state = authProvider.state;
+        final state = _authProvider!.state;
         if (_navigated) return;
 
         if (state.isSuccess) {
@@ -42,40 +43,16 @@ class _SplashScreenState extends State<SplashScreen> {
         // Do not auto-navigate on initial; let user press Next to go to Login
       };
 
-      authProvider.addListener(_authListener!);
+      _authProvider!.addListener(_authListener!);
     });
-
-    // Future.microtask(() {
-    //   if (!mounted) return;
-    //   final authProvider = context.read<AuthProvider>();
-
-    //   authProvider.checkAuthStatus();
-
-    //   _authListener = () async {
-    //     final state = authProvider.state;
-    //     if (_navigated) return;
-
-    //     if (state.isSuccess) {
-    //       // Briefly show splash before navigating to Home if already authenticated
-    //       // await Future.delayed(const Duration(milliseconds: 800));
-    //       if (!mounted || _navigated) return;
-    //       _navigated = true;
-    //       Navigator.pushReplacementNamed(context, AppRouter.home);
-    //     }
-    //     // Do not auto-navigate on initial; let user press Next to go to Login
-    //   };
-
-    //   authProvider.addListener(_authListener!);
-    // });
 
     currentPage = widget.index;
   }
 
   @override
   void dispose() {
-    final authProvider = context.read<AuthProvider>();
     if (_authListener != null) {
-      authProvider.removeListener(_authListener!);
+      _authProvider!.removeListener(_authListener!);
     }
     _pageController.dispose();
     super.dispose();
@@ -160,7 +137,7 @@ class _SplashScreenState extends State<SplashScreen> {
                         ),
                       ),
                       const Spacer(flex: 3),
-                      // if (currentPage == splashData.length - 1)
+
                       ElevatedButton(
                         onPressed: () async {
                           final auth = context.read<AuthProvider>();
@@ -173,7 +150,10 @@ class _SplashScreenState extends State<SplashScreen> {
                               );
                             }
                           } else {
-                            Navigator.pushNamed(context, AppRouter.login);
+                            Navigator.pushReplacementNamed(
+                              context,
+                              AppRouter.login,
+                            );
                           }
                         },
                         child: ConstrainedBox(
