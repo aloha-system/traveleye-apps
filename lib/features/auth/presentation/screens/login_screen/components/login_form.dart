@@ -11,7 +11,6 @@ class LoginForm extends StatefulWidget {
 
   @override
   State<LoginForm> createState() => _LoginFormState();
-  State<LoginForm> createState() => _LoginFormState();
 }
 
 class _LoginFormState extends State<LoginForm>
