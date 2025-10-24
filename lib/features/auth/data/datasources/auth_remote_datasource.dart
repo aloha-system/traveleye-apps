@@ -1,9 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthRemoteDatasource {
   final FirebaseAuth firebaseAuth;
+  final GoogleSignIn _googleSignIn;
 
-  const AuthRemoteDatasource(this.firebaseAuth);
+  const AuthRemoteDatasource(this.firebaseAuth, this._googleSignIn);
 
   // firebase authentication create accound with email and password
   Future<User> createAccount({
@@ -44,6 +46,28 @@ class AuthRemoteDatasource {
   // firebase authentication sign out
   Future<void> signOut() async {
     await firebaseAuth.signOut();
+  }
+
+  // firebase authentication sign in with Google
+  Future<User> signInWithGoogle() async {
+    try {
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      if (googleUser == null) {
+        throw Exception('Sign in aborted');
+      }
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+      final result = await firebaseAuth.signInWithCredential(credential);
+      return result.user!;
+    } on FirebaseAuthException catch (e) {
+      throw Exception('Google sign-in failed. ${e.code}');
+    } catch (e) {
+      rethrow;
+    }
   }
 
   // firebase authentication reset password
