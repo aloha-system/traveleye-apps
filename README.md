@@ -57,7 +57,7 @@ The BooLe app (traveleye-apps) adopts a feature-based modular architecture align
 Each module is structured to separate concerns clearly across presentation, domain, and data layers — improving scalability, maintainability, and testability.
 
 <p align="center">
-  <img src="assets//images/structurfolder.png" width="100%">
+  <img src="assets/images/structurfolder.png" width="100%">
 </p>
 
  ## 🧱 Design Principle
