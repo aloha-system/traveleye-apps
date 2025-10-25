@@ -3,7 +3,8 @@ import 'package:boole_apps/env/env.dart';
 import 'package:http/http.dart' as http;
 
 class DirectionsRemoteDatasource {
-  static const String _baseUrl = 'https://maps.googleapis.com/maps/api/directions/json';
+  static const String _baseUrl =
+      'https://maps.googleapis.com/maps/api/directions/json';
 
   Future<DirectionsResult> getRoute({
     required double originLat,
@@ -12,12 +13,14 @@ class DirectionsRemoteDatasource {
     required double destLng,
     String mode = 'driving',
   }) async {
-    final uri = Uri.parse(_baseUrl).replace(queryParameters: {
-      'origin': '$originLat,$originLng',
-      'destination': '$destLat,$destLng',
-      'mode': mode,
-      'key': Env.googleMapsApiKey,
-    });
+    final uri = Uri.parse(_baseUrl).replace(
+      queryParameters: {
+        'origin': '$originLat,$originLng',
+        'destination': '$destLat,$destLng',
+        'mode': mode,
+        'key': Env.googleMapsApiKey,
+      },
+    );
 
     final res = await http.get(uri);
     if (res.statusCode != 200) {

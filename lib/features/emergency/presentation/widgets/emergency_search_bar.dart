@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class EmergencySearchBar extends StatefulWidget {
-  const EmergencySearchBar({Key? key}) : super(key: key);
+  const EmergencySearchBar({super.key});
 
   @override
   State<EmergencySearchBar> createState() => _EmergencySearchBarState();
@@ -21,6 +21,7 @@ class _EmergencySearchBarState extends State<EmergencySearchBar> {
   void _onSearchChanged(String value) {
     // Debounce search untuk performa lebih baik
     Future.delayed(const Duration(milliseconds: 500), () {
+      if (!mounted) return;
       if (_searchController.text == value) {
         context.read<EmergencyProvider>().searchServices(value);
       }

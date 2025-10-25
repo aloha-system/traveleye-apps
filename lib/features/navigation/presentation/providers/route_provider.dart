@@ -31,7 +31,9 @@ class RouteProvider extends ChangeNotifier {
       final hasPermission = await _ensureLocationPermission();
       if (!hasPermission) throw Exception('Location permission denied');
 
-      final pos = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
+      final pos = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.best,
+      );
       _origin = pos;
 
       try {

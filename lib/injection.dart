@@ -1,4 +1,5 @@
 // ==== Feature Emergency ====
+import 'package:boole_apps/features/culture/domain/usecases/search_culture_usecase.dart';
 import 'package:boole_apps/features/emergency/data/datasources/e_services_remote_datasource.dart';
 import 'package:boole_apps/features/emergency/data/repositories/emergency_services_repsitory_impl.dart';
 import 'package:boole_apps/features/emergency/domain/repositories/emergency_repository.dart';
@@ -24,6 +25,7 @@ import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 // ==== Feature Auth ====
 import 'features/auth/data/datasources/auth_remote_datasource.dart';
@@ -31,6 +33,7 @@ import 'features/auth/data/repositories/auth_repository_imp.dart';
 import 'features/auth/domain/repositories/auth_repository.dart';
 import 'features/auth/domain/usecases/create_account_usecase.dart';
 import 'features/auth/domain/usecases/reset_password_usecase.dart';
+import 'features/auth/domain/usecases/sign_in_with_google_usecase.dart';
 import 'features/auth/domain/usecases/sign_in_usecase.dart';
 import 'features/auth/domain/usecases/sign_out_usecase.dart';
 import 'features/auth/presentation/provider/auth_provider.dart';
@@ -82,8 +85,11 @@ class AppInjection {
     // ==============================
     Provider<FirebaseAuth>(create: (_) => FirebaseAuth.instance),
 
-    ProxyProvider<FirebaseAuth, AuthRemoteDatasource>(
-      update: (_, firebaseAuth, __) => AuthRemoteDatasource(firebaseAuth),
+    Provider<GoogleSignIn>(create: (_) => GoogleSignIn()),
+
+    ProxyProvider2<FirebaseAuth, GoogleSignIn, AuthRemoteDatasource>(
+      update: (_, firebaseAuth, googleSignIn, __) =>
+          AuthRemoteDatasource(firebaseAuth, googleSignIn),
     ),
 
     ProxyProvider<AuthRemoteDatasource, AuthRepository>(
@@ -105,13 +111,17 @@ class AppInjection {
     ProxyProvider<AuthRepository, CheckAuthStatusUsecase>(
       update: (_, repo, __) => CheckAuthStatusUsecase(repo),
     ),
+    ProxyProvider<AuthRepository, SignInWithGoogleUsecase>(
+      update: (_, repo, __) => SignInWithGoogleUsecase(repo),
+    ),
 
-    ChangeNotifierProxyProvider5<
+    ChangeNotifierProxyProvider6<
       CreateAccountUsecase,
       SignInUsecase,
       SignOutUsecase,
       ResetPasswordUsecase,
       CheckAuthStatusUsecase,
+      SignInWithGoogleUsecase,
       AuthProvider
     >(
       create: (context) => AuthProvider(
@@ -120,8 +130,9 @@ class AppInjection {
         signOutUsecase: context.read<SignOutUsecase>(),
         resetPasswordUsecase: context.read<ResetPasswordUsecase>(),
         checkAuthStatusUsecase: context.read<CheckAuthStatusUsecase>(),
+        signInWithGoogleUsecase: context.read<SignInWithGoogleUsecase>(),
       ),
-      update: (_, a, b, c, d, e, authProvider) => authProvider!,
+      update: (_, a, b, c, d, e, f, authProvider) => authProvider!,
     ),
 
     // ==============================
@@ -251,17 +262,29 @@ class AppInjection {
       update: (_, repository, __) => GetCultureByIdUsecase(repository),
     ),
 
-    ChangeNotifierProxyProvider2<
+    ProxyProvider<CultureRepository, SearchCultureUsecase>(
+      update: (_, repository, __) => SearchCultureUsecase(repository),
+    ),
+
+    ChangeNotifierProxyProvider3<
       GetCultureUsecase,
       GetCultureByIdUsecase,
+      SearchCultureUsecase,
       CultureProvider
     >(
       create: (context) => CultureProvider(
         getCultureUsecase: context.read<GetCultureUsecase>(),
         getCultureByIdUsecase: context.read<GetCultureByIdUsecase>(),
+        searchCultureUsecase: context.read<SearchCultureUsecase>(),
       ),
-      update: (_, getCultureUsecase, getCultureByIdUsecase, provider) =>
-          provider!,
+      update:
+          (
+            _,
+            getCultureUsecase,
+            getCultureByIdUsecase,
+            searchCultureUsecase,
+            provider,
+          ) => provider!,
     ),
 
     // ==============================

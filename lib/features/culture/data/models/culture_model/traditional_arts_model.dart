@@ -1,4 +1,3 @@
-
 import 'package:boole_apps/features/culture/domain/entities/culture_entities/traditional_arts_entity.dart';
 
 class TraditionalArtsModel extends TraditionalArts {

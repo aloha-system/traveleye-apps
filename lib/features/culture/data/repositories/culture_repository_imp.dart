@@ -27,4 +27,14 @@ class CultureRepositoryImp implements CultureRepository {
       throw Exception('Failed to fetch culture by ID: $e');
     }
   }
+
+  @override
+  Future<List<Culture>> searchCulture(String query) async {
+    try {
+      final models = await remoteDatasource.searchCultures(query);
+      return models.map((model) => model.toEntity()).toList();
+    } catch (e) {
+      throw Exception('Failed to search culture');
+    }
+  }
 }

@@ -15,7 +15,9 @@ class TranslationModel extends TranslationEntity {
       translatedText: json['translatedText'] ?? '',
       sourceLanguage: json['sourceLanguage'] ?? '',
       targetLanguage: json['targetLanguage'] ?? '',
-      timestamp: DateTime.parse(json['timestamp'] ?? DateTime.now().toIso8601String()),
+      timestamp: DateTime.parse(
+        json['timestamp'] ?? DateTime.now().toIso8601String(),
+      ),
     );
   }
 

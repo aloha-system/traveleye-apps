@@ -36,7 +36,9 @@ class DestinationCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: Theme.of(context).colorScheme.shadow.withAlpha((0.1*255).round()),
+                color: Theme.of(
+                  context,
+                ).colorScheme.shadow.withAlpha((0.1 * 255).round()),
                 blurRadius: 8,
                 offset: const Offset(0, 2),
               ),
@@ -51,23 +53,18 @@ class DestinationCard extends StatelessWidget {
                     imageUrl: imageUrl,
                     fit: BoxFit.cover,
                     placeholder: (context, url) => Container(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .primary
-                          .withAlpha((0.1*255).round()),
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.primary.withAlpha((0.1 * 255).round()),
                       child: const Center(
                         child: CircularProgressIndicator(strokeWidth: 2),
                       ),
                     ),
                     errorWidget: (context, url, error) => Container(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .primary
-                          .withAlpha((0.1*255).round()),
-                      child: const Icon(
-                        Icons.image_not_supported,
-                        size: 40,
-                      ),
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.primary.withAlpha((0.1 * 255).round()),
+                      child: const Icon(Icons.image_not_supported, size: 40),
                     ),
                   ),
                 ),
@@ -79,7 +76,7 @@ class DestinationCard extends StatelessWidget {
                         end: Alignment.bottomCenter,
                         colors: [
                           Colors.transparent,
-                          Colors.black.withAlpha((0.7*255).round()),
+                          Colors.black.withAlpha((0.7 * 255).round()),
                         ],
                       ),
                     ),
@@ -96,7 +93,8 @@ class DestinationCard extends StatelessWidget {
                         name,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
                             ),
@@ -106,8 +104,8 @@ class DestinationCard extends StatelessWidget {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Colors.white.withAlpha((0.85*255).round()),
-                            ),
+                          color: Colors.white.withAlpha((0.85 * 255).round()),
+                        ),
                       ),
                       const SizedBox(height: 8),
                       Row(
@@ -116,7 +114,8 @@ class DestinationCard extends StatelessWidget {
                           const SizedBox(width: 4),
                           Text(
                             rating,
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            style: Theme.of(context).textTheme.bodySmall
+                                ?.copyWith(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w600,
                                 ),

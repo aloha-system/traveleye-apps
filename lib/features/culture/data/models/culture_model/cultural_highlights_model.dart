@@ -1,4 +1,3 @@
-
 import 'package:boole_apps/features/culture/domain/entities/culture_entities/cultural_highlights_entity.dart';
 
 class CulturalHighlightsModel extends CulturalHighlights {
