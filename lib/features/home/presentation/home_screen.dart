@@ -1,10 +1,10 @@
 import 'package:boole_apps/app/app_router.dart';
 import 'package:boole_apps/core/widgets/app_search_bar.dart';
 import 'package:boole_apps/core/widgets/destination_card.dart';
+import 'package:boole_apps/features/auth/presentation/provider/auth_provider.dart';
 import 'package:boole_apps/features/home/presentation/widgets/quick_actions.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:boole_apps/features/auth/presentation/provider/auth_provider.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -69,10 +69,9 @@ class HomeScreen extends StatelessWidget {
                     maxLines: 1,
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.w300,
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onSurface
-                          .withAlpha((0.7 * 255).round()),
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.onSurface.withAlpha((0.7 * 255).round()),
                     ),
                   ),
                   Text(
@@ -86,7 +85,7 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
             Container(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.all(3),
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.primaryContainer,
                 borderRadius: BorderRadius.circular(12),

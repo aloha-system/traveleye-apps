@@ -42,7 +42,9 @@ class AuthProvider extends ChangeNotifier {
         password: password,
         name: name,
       );
-      _state = _state.copyWith(status: AuthStatus.success);
+      _state = _state.copyWith(status: AuthStatus.initial);
+      _user = null;
+      await signOutUsecase.call();
     } catch (e) {
       _state = _state.copyWith(status: AuthStatus.error, message: e.toString());
     } finally {
