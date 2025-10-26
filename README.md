@@ -12,8 +12,7 @@
 
 ## 🏕️ Project Overview
 
-**BooLe** is a digital tourism guide app that helps travelers (especially foreign tourists, or “bule”) explore Indonesia with ease.  
-It combines destination discovery, local culture insights, and emergency support — all in one mobile app.
+**BooLe** is a digital tourism guide app that helps travelers (especially foreign tourists, or “bule”) explore Indonesia with ease. It combines destination discovery, local culture insights, and emergency support — all in one mobile app.
 
 ---
 
