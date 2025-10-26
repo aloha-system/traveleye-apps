@@ -104,14 +104,14 @@ Clean Architecture Benefits:
 
 Follow these steps to set up and run the BooLe app locally on your device:
 
-# 1️⃣ Clone the repository
+- 1️⃣ Clone the repository
 git clone https://github.com/aloha-system/traveleye-apps.git
 cd traveleye-apps
 
-# 2️⃣ Install dependencies
+- 2️⃣ Install dependencies
 flutter pub get
 
-# 3️⃣ Configure environment variables
+- 3️⃣ Configure environment variables
 # Create a .env file or copy from .env.example (if provided)
 # Add your Supabase and Firebase credentials
 
