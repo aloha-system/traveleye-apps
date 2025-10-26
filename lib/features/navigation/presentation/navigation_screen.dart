@@ -24,6 +24,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
   bool _searching = false;
   List<Destination> _results = const [];
   Destination? _selected;
+  GoogleMapController? _mapCtrl;
 
   @override
   void initState() {
@@ -97,13 +98,17 @@ class _NavigationScreenState extends State<NavigationScreen> {
       final pos = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.best,
       );
+      final cp = CameraPosition(
+        target: LatLng(pos.latitude, pos.longitude),
+        zoom: 14,
+      );
       setState(() {
-        _initial = CameraPosition(
-          target: LatLng(pos.latitude, pos.longitude),
-          zoom: 14,
-        );
+        _initial = cp;
         _loading = false;
       });
+      if (_mapCtrl != null) {
+        await _mapCtrl!.animateCamera(CameraUpdate.newCameraPosition(cp));
+      }
     } catch (e) {
       setState(() {
         _error = '$e';
@@ -190,6 +195,14 @@ class _NavigationScreenState extends State<NavigationScreen> {
                       initialCameraPosition: _initial,
                       myLocationEnabled: true,
                       myLocationButtonEnabled: true,
+                      onMapCreated: (controller) async {
+                        _mapCtrl = controller;
+                        if (!_loading) {
+                          await controller.moveCamera(
+                            CameraUpdate.newCameraPosition(_initial),
+                          );
+                        }
+                      },
                     ),
                     if (_loading)
                       const Positioned.fill(
