@@ -115,7 +115,7 @@ flutter pub get
 # Create a .env file or copy from .env.example (if provided)
 # Add your Supabase and Firebase credentials
 
-# 4️⃣ Run the application
+- 4️⃣ Run the application
 flutter run
 
 💡 Notes
