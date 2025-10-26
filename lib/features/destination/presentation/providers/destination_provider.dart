@@ -8,6 +8,8 @@ class SearchItem {
   final String location;
   final String imageUrl;
   final String ratingText;
+  final double? latitude;
+  final double? longitude;
 
   const SearchItem({
     required this.id,
@@ -15,6 +17,8 @@ class SearchItem {
     required this.location,
     required this.imageUrl,
     required this.ratingText,
+    this.latitude,
+    this.longitude,
   });
 }
 
@@ -27,8 +31,8 @@ class DestinationProvider extends ChangeNotifier {
   DestinationProvider({
     required SearchDestinationsUsecase useCase,
     required DestinationMapper mapper,
-  })  : _usecase = useCase,
-        _mapper = mapper;
+  }) : _usecase = useCase,
+       _mapper = mapper;
 
   String _keyword = '';
   bool _popularOnly = false;

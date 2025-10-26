@@ -1,8 +1,10 @@
-import 'package:flutter/material.dart';
 import 'package:boole_apps/app/app_router.dart';
 import 'package:boole_apps/core/widgets/app_search_bar.dart';
 import 'package:boole_apps/core/widgets/destination_card.dart';
+import 'package:boole_apps/features/auth/presentation/provider/auth_provider.dart';
 import 'package:boole_apps/features/home/presentation/widgets/quick_actions.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -44,43 +46,63 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildHeader(BuildContext context) {
+    final user = context.watch<AuthProvider>().user;
+    final displayName = user?.displayName ?? '';
+    final greeting = displayName.isNotEmpty
+        ? 'Welcome, $displayName!'
+        : 'Welcome!';
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Welcome!',
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.w300,
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.onSurface.withAlpha((0.7 * 255).round()),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    greeting,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.w300,
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.onSurface.withAlpha((0.7 * 255).round()),
+                    ),
                   ),
-                ),
-                Text(
-                  'BooLe',
-                  style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: Theme.of(context).colorScheme.primary,
+                  Text(
+                    'BooLe',
+                    style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
             Container(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.all(3),
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.primaryContainer,
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Icon(
-                Icons.travel_explore,
-                color: Theme.of(context).colorScheme.primary,
-                size: 28,
+              child: IconButton(
+                icon: const Icon(Icons.logout),
+                onPressed: () async {
+                  await context.read<AuthProvider>().signOut();
+                  if (context.mounted) {
+                    Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      AppRouter.login,
+                      (route) => false,
+                    );
+                  }
+                },
+                tooltip: 'Logout',
               ),
             ),
           ],
@@ -148,13 +170,22 @@ class HomeScreen extends StatelessWidget {
                     if (a['title'] == 'Translator') {
                       Navigator.pushNamed(context, AppRouter.translate);
                     } else if (a['title'] == 'Destination') {
-                      Navigator.pushNamed(context, AppRouter.destination, arguments: {'popularOnly': true});
+                      Navigator.pushNamed(
+                        context,
+                        AppRouter.destination,
+                        arguments: {'popularOnly': true},
+                      );
+                    } else if (a['title'] == 'Culture') {
+                      Navigator.pushNamed(context, AppRouter.culture);
+                    } else if (a['title'] == 'Navigation') {
+                      Navigator.pushNamed(context, AppRouter.navigation);
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text('${a['title']} - Coming Soon!'),
-                          backgroundColor:
-                              Theme.of(context).colorScheme.primary,
+                          backgroundColor: Theme.of(
+                            context,
+                          ).colorScheme.primary,
                         ),
                       );
                     }
@@ -245,12 +276,7 @@ class HomeScreen extends StatelessWidget {
   Widget _buildEmergencySection(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text('Emergency Services - Coming Soon!'),
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
-        );
+        Navigator.pushNamed(context, AppRouter.emergency);
       },
       child: Container(
         padding: const EdgeInsets.all(20),

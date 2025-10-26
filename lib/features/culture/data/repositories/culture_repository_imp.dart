@@ -1,5 +1,5 @@
 import 'package:boole_apps/features/culture/data/datasource/culture_remote_datasource.dart';
-import 'package:boole_apps/features/culture/domain/entities/culture_entity.dart';
+import 'package:boole_apps/features/culture/domain/entities/culture_entities/culture_entity.dart';
 import 'package:boole_apps/features/culture/domain/repositories/culture_repository.dart';
 
 class CultureRepositoryImp implements CultureRepository {
@@ -14,6 +14,27 @@ class CultureRepositoryImp implements CultureRepository {
       return models.map((m) => m.toEntity()).toList();
     } catch (e) {
       throw Exception('Failed to fetch culture data: $e');
+    }
+  }
+
+  @override
+  Future<Culture> getDetailCultureById(String id) async {
+    try {
+      final model = await remoteDatasource.fetchCultureById(id);
+
+      return model.toEntity();
+    } catch (e) {
+      throw Exception('Failed to fetch culture by ID: $e');
+    }
+  }
+
+  @override
+  Future<List<Culture>> searchCulture(String query) async {
+    try {
+      final models = await remoteDatasource.searchCultures(query);
+      return models.map((model) => model.toEntity()).toList();
+    } catch (e) {
+      throw Exception('Failed to search culture');
     }
   }
 }

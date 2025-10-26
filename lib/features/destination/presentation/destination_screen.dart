@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:boole_apps/core/widgets/destination_card.dart';
 import 'package:boole_apps/features/destination/presentation/providers/destination_provider.dart';
+import 'package:boole_apps/app/app_router.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -85,38 +86,47 @@ class _SearchScreenState extends State<SearchScreen> {
           children: [
             Text('Filter Lanjutan', style: Theme.of(ctx).textTheme.titleMedium),
             const SizedBox(height: 12),
-            Row(children: [
-              const Icon(Icons.sell, size: 18),
-              const SizedBox(width: 8),
-              const Text('Budget Maksimal'),
-              const Spacer(),
-              DropdownButton<int?>(
-                value: c.maxBudget,
-                items: const [
-                  DropdownMenuItem(value: null, child: Text('Tanpa batas')),
-                  DropdownMenuItem(value: 100000, child: Text('≤ 100k')),
-                  DropdownMenuItem(value: 200000, child: Text('≤ 200k')),
-                  DropdownMenuItem(value: 300000, child: Text('≤ 300k')),
-                ],
-                onChanged: (v) => c.setBudget(v),
-              ),
-            ]),
+            Row(
+              children: [
+                const Icon(Icons.sell, size: 18),
+                const SizedBox(width: 8),
+                const Text('Budget Maksimal'),
+                const Spacer(),
+                DropdownButton<int?>(
+                  value: c.maxBudget,
+                  items: const [
+                    DropdownMenuItem(value: null, child: Text('Tanpa batas')),
+                    DropdownMenuItem(value: 100000, child: Text('≤ 100k')),
+                    DropdownMenuItem(value: 200000, child: Text('≤ 200k')),
+                    DropdownMenuItem(value: 300000, child: Text('≤ 300k')),
+                  ],
+                  onChanged: (v) => c.setBudget(v),
+                ),
+              ],
+            ),
             const SizedBox(height: 8),
-            Row(children: [
-              const Icon(Icons.place, size: 18),
-              const SizedBox(width: 8),
-              const Text('Nearby (eksperimental)'),
-              const Spacer(),
-              Switch(value: c.nearbyOnly, onChanged: (_) => c.toggleNearby()),
-            ]),
+            Row(
+              children: [
+                const Icon(Icons.place, size: 18),
+                const SizedBox(width: 8),
+                const Text('Nearby (eksperimental)'),
+                const Spacer(),
+                Switch(value: c.nearbyOnly, onChanged: (_) => c.toggleNearby()),
+              ],
+            ),
             const SizedBox(height: 8),
-            Row(children: [
-              const Icon(Icons.star_rounded, size: 18),
-              const SizedBox(width: 8),
-              const Text('Popular (≥ 4.7)'),
-              const Spacer(),
-              Switch(value: c.popularOnly, onChanged: (_) => c.togglePopular()),
-            ]),
+            Row(
+              children: [
+                const Icon(Icons.star_rounded, size: 18),
+                const SizedBox(width: 8),
+                const Text('Popular (≥ 4.7)'),
+                const Spacer(),
+                Switch(
+                  value: c.popularOnly,
+                  onChanged: (_) => c.togglePopular(),
+                ),
+              ],
+            ),
             const SizedBox(height: 16),
             SizedBox(
               width: double.infinity,
@@ -124,7 +134,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 onPressed: () => Navigator.pop(ctx),
                 child: const Text('Terapkan'),
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -159,7 +169,10 @@ class _SearchInput extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(Icons.search, color: cs.onSurface.withAlpha((0.6 * 255).round())),
+          Icon(
+            Icons.search,
+            color: cs.onSurface.withAlpha((0.6 * 255).round()),
+          ),
           const SizedBox(width: 8),
           Expanded(
             child: TextField(
@@ -240,14 +253,15 @@ class _BudgetChip extends StatelessWidget {
         PopupMenuItem(value: 300000, child: Text('≤ 300k')),
       ],
       child: FilterChip(
-        label: Text(selectedBudget == null ? 'Budget' : 'Budget: ≤ $selectedBudget'),
+        label: Text(
+          selectedBudget == null ? 'Budget' : 'Budget: ≤ $selectedBudget',
+        ),
         selected: selectedBudget != null,
         onSelected: (_) {},
       ),
     );
   }
 }
-
 
 class _ResultList extends StatelessWidget {
   const _ResultList();
@@ -274,11 +288,17 @@ class _ResultList extends StatelessWidget {
             children: [
               const Icon(Icons.error_outline, size: 48),
               const SizedBox(height: 12),
-              Text('An error occurred', style: Theme.of(context).textTheme.titleMedium),
+              Text(
+                'An error occurred',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
               const SizedBox(height: 8),
               Text('${c.error}', textAlign: TextAlign.center),
               const SizedBox(height: 12),
-              FilledButton(onPressed: () => c.retry(), child: const Text('Try Again')),
+              FilledButton(
+                onPressed: () => c.retry(),
+                child: const Text('Try Again'),
+              ),
             ],
           ),
         ),
@@ -314,6 +334,27 @@ class _ResultList extends StatelessWidget {
           onTap: () {
             Navigator.pushNamed(context, '/detail', arguments: it.id);
           },
+          onLongPress: () {
+            if (it.latitude != null && it.longitude != null) {
+              Navigator.pushNamed(
+                context,
+                AppRouter.mapRoute,
+                arguments: {
+                  'lat': it.latitude!,
+                  'lng': it.longitude!,
+                  'title': it.name,
+                },
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text(
+                    'Koordinat tidak tersedia untuk destinasi ini.',
+                  ),
+                ),
+              );
+            }
+          },
         );
       },
     );
@@ -332,9 +373,14 @@ class _EmptyHint extends StatelessWidget {
           children: [
             const Icon(Icons.search, size: 48),
             const SizedBox(height: 12),
-            Text('Cari destinasi', style: Theme.of(context).textTheme.titleMedium),
+            Text(
+              'Cari destinasi',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
             const SizedBox(height: 8),
-            const Text('Ketik nama tempat, kota, atau pakai filter Popular/Budget/Nearby.'),
+            const Text(
+              'Ketik nama tempat, kota, atau pakai filter Popular/Budget/Nearby.',
+            ),
           ],
         ),
       ),
@@ -354,9 +400,14 @@ class _NoResults extends StatelessWidget {
           children: [
             const Icon(Icons.sentiment_dissatisfied, size: 48),
             const SizedBox(height: 12),
-            Text('Tidak ada hasil', style: Theme.of(context).textTheme.titleMedium),
+            Text(
+              'Tidak ada hasil',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
             const SizedBox(height: 8),
-            const Text('Coba ubah kata kunci atau long-press tombol tanggal untuk menghapus rentang tanggal.'),
+            const Text(
+              'Coba ubah kata kunci atau long-press tombol tanggal untuk menghapus rentang tanggal.',
+            ),
           ],
         ),
       ),

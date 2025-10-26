@@ -1,8 +1,23 @@
+// ==== Feature Emergency ====
+import 'package:boole_apps/features/culture/domain/usecases/search_culture_usecase.dart';
+import 'package:boole_apps/features/emergency/data/datasources/e_services_remote_datasource.dart';
+import 'package:boole_apps/features/emergency/data/repositories/emergency_services_repsitory_impl.dart';
+import 'package:boole_apps/features/emergency/domain/repositories/emergency_repository.dart';
+import 'package:boole_apps/features/emergency/domain/usecases/get_all_services_usecase.dart';
+import 'package:boole_apps/features/emergency/domain/usecases/get_priority_services_usecase.dart';
+import 'package:boole_apps/features/emergency/domain/usecases/get_service_by_id_usecase.dart';
+import 'package:boole_apps/features/emergency/domain/usecases/get_services_by_category_usecase.dart';
+import 'package:boole_apps/features/emergency/domain/usecases/search_services_usecase.dart';
+import 'package:boole_apps/features/emergency/presentation/provider/emergency_provider.dart';
+import 'package:http/http.dart' as http;
+
+// ==== Feature Culture ====
 import 'package:boole_apps/env/env.dart';
 import 'package:boole_apps/features/auth/domain/usecases/check_auth_status_usecase.dart';
 import 'package:boole_apps/features/culture/data/datasource/culture_remote_datasource.dart';
 import 'package:boole_apps/features/culture/data/repositories/culture_repository_imp.dart';
 import 'package:boole_apps/features/culture/domain/repositories/culture_repository.dart';
+import 'package:boole_apps/features/culture/domain/usecases/get_culture_by_id_usecase.dart';
 import 'package:boole_apps/features/culture/domain/usecases/get_culture_usecase.dart';
 import 'package:boole_apps/features/culture/presentation/provider/culture_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
@@ -10,6 +25,7 @@ import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 // ==== Feature Auth ====
 import 'features/auth/data/datasources/auth_remote_datasource.dart';
@@ -17,6 +33,7 @@ import 'features/auth/data/repositories/auth_repository_imp.dart';
 import 'features/auth/domain/repositories/auth_repository.dart';
 import 'features/auth/domain/usecases/create_account_usecase.dart';
 import 'features/auth/domain/usecases/reset_password_usecase.dart';
+import 'features/auth/domain/usecases/sign_in_with_google_usecase.dart';
 import 'features/auth/domain/usecases/sign_in_usecase.dart';
 import 'features/auth/domain/usecases/sign_out_usecase.dart';
 import 'features/auth/presentation/provider/auth_provider.dart';
@@ -46,14 +63,21 @@ import 'features/translate/domain/usecases/speech_to_text_usecase.dart';
 import 'features/translate/domain/usecases/text_to_speech_usecase.dart';
 import 'features/translate/presentation/provider/translation_provider.dart';
 
+// ==== Feature Navigation (Directions) ====
+import 'features/navigation/data/datasources/directions_remote_datasource.dart';
+import 'features/navigation/data/repositories/directions_repository_impl.dart';
+import 'features/navigation/domain/repositories/directions_repository.dart';
+import 'features/navigation/domain/usecases/get_route_usecase.dart';
+
 class AppInjection {
   // Supabase REST constants (sementara hardcoded, nanti bisa diganti ke .env)
   static const String _supabaseDestinationsEndpoint =
       'https://fowfuytbmgxpeogsaiwk.supabase.co/rest/v1/destinations';
-  static const String _supabaseAnonKey =
-      Env.supabaseApiKey;
+  static const String _supabaseAnonKey = Env.supabaseApiKey;
   static const String _supabaseCultureEndpoint =
       'https://fowfuytbmgxpeogsaiwk.supabase.co/rest/v1/culture';
+  static const String _supabaseEmergencyEndpoint =
+      'https://fowfuytbmgxpeogsaiwk.supabase.co/rest/v1';
 
   static List<SingleChildWidget> providers() => [
     // ==============================
@@ -61,8 +85,11 @@ class AppInjection {
     // ==============================
     Provider<FirebaseAuth>(create: (_) => FirebaseAuth.instance),
 
-    ProxyProvider<FirebaseAuth, AuthRemoteDatasource>(
-      update: (_, firebaseAuth, __) => AuthRemoteDatasource(firebaseAuth),
+    Provider<GoogleSignIn>(create: (_) => GoogleSignIn()),
+
+    ProxyProvider2<FirebaseAuth, GoogleSignIn, AuthRemoteDatasource>(
+      update: (_, firebaseAuth, googleSignIn, __) =>
+          AuthRemoteDatasource(firebaseAuth, googleSignIn),
     ),
 
     ProxyProvider<AuthRemoteDatasource, AuthRepository>(
@@ -84,13 +111,17 @@ class AppInjection {
     ProxyProvider<AuthRepository, CheckAuthStatusUsecase>(
       update: (_, repo, __) => CheckAuthStatusUsecase(repo),
     ),
+    ProxyProvider<AuthRepository, SignInWithGoogleUsecase>(
+      update: (_, repo, __) => SignInWithGoogleUsecase(repo),
+    ),
 
-    ChangeNotifierProxyProvider5<
+    ChangeNotifierProxyProvider6<
       CreateAccountUsecase,
       SignInUsecase,
       SignOutUsecase,
       ResetPasswordUsecase,
       CheckAuthStatusUsecase,
+      SignInWithGoogleUsecase,
       AuthProvider
     >(
       create: (context) => AuthProvider(
@@ -99,8 +130,9 @@ class AppInjection {
         signOutUsecase: context.read<SignOutUsecase>(),
         resetPasswordUsecase: context.read<ResetPasswordUsecase>(),
         checkAuthStatusUsecase: context.read<CheckAuthStatusUsecase>(),
+        signInWithGoogleUsecase: context.read<SignInWithGoogleUsecase>(),
       ),
-      update: (_, a, b, c, d, e, authProvider) => authProvider!,
+      update: (_, a, b, c, d, e, f, authProvider) => authProvider!,
     ),
 
     // ==============================
@@ -226,10 +258,104 @@ class AppInjection {
       update: (_, repository, __) => GetCultureUsecase(repository),
     ),
 
-    ChangeNotifierProxyProvider<GetCultureUsecase, CultureProvider>(
-      create: (context) =>
-          CultureProvider(getCultureUsecase: context.read<GetCultureUsecase>()),
-      update: (_, useCase, provider) => provider!,
+    ProxyProvider<CultureRepository, GetCultureByIdUsecase>(
+      update: (_, repository, __) => GetCultureByIdUsecase(repository),
+    ),
+
+    ProxyProvider<CultureRepository, SearchCultureUsecase>(
+      update: (_, repository, __) => SearchCultureUsecase(repository),
+    ),
+
+    ChangeNotifierProxyProvider3<
+      GetCultureUsecase,
+      GetCultureByIdUsecase,
+      SearchCultureUsecase,
+      CultureProvider
+    >(
+      create: (context) => CultureProvider(
+        getCultureUsecase: context.read<GetCultureUsecase>(),
+        getCultureByIdUsecase: context.read<GetCultureByIdUsecase>(),
+        searchCultureUsecase: context.read<SearchCultureUsecase>(),
+      ),
+      update:
+          (
+            _,
+            getCultureUsecase,
+            getCultureByIdUsecase,
+            searchCultureUsecase,
+            provider,
+          ) => provider!,
+    ),
+
+    // ==============================
+    // NAVIGATION / DIRECTIONS CHAIN
+    // ==============================
+    Provider<DirectionsRemoteDatasource>(
+      create: (_) => DirectionsRemoteDatasource(),
+    ),
+    ProxyProvider<DirectionsRemoteDatasource, DirectionsRepository>(
+      update: (_, remote, __) => DirectionsRepositoryImpl(remote),
+    ),
+    ProxyProvider<DirectionsRepository, GetRouteUsecase>(
+      update: (_, repo, __) => GetRouteUsecase(repo),
+    ),
+
+    // ==============================
+    // EMERGENCY NUMBERS CHAIN
+    // ==============================
+
+    // HTTP Client (shared)
+    Provider<http.Client>(create: (_) => http.Client()),
+
+    // Datasource
+    Provider<EmergencyRemoteDatasource>(
+      create: (context) => EmergencyRemoteDatasourceImpl(
+        baseUrl: _supabaseEmergencyEndpoint,
+        apiKey: _supabaseAnonKey,
+        client: context.read<http.Client>(),
+      ),
+    ),
+
+    // Repository
+    ProxyProvider<EmergencyRemoteDatasource, EmergencyRepository>(
+      update: (_, datasource, __) => EmergencyRepositoryImpl(datasource),
+    ),
+
+    // Usecases
+    ProxyProvider<EmergencyRepository, GetAllServicesUsecase>(
+      update: (_, repository, __) => GetAllServicesUsecase(repository),
+    ),
+    ProxyProvider<EmergencyRepository, GetServicesByCategoryUsecase>(
+      update: (_, repository, __) => GetServicesByCategoryUsecase(repository),
+    ),
+    ProxyProvider<EmergencyRepository, SearchServicesUsecase>(
+      update: (_, repository, __) => SearchServicesUsecase(repository),
+    ),
+    ProxyProvider<EmergencyRepository, GetPriorityServicesUsecase>(
+      update: (_, repository, __) => GetPriorityServicesUsecase(repository),
+    ),
+    ProxyProvider<EmergencyRepository, GetServiceByIdUsecase>(
+      update: (_, repository, __) => GetServiceByIdUsecase(repository),
+    ),
+
+    // Provider
+    ChangeNotifierProxyProvider5<
+      GetAllServicesUsecase,
+      GetServicesByCategoryUsecase,
+      SearchServicesUsecase,
+      GetPriorityServicesUsecase,
+      GetServiceByIdUsecase,
+      EmergencyProvider
+    >(
+      create: (context) => EmergencyProvider(
+        getAllServicesUsecase: context.read<GetAllServicesUsecase>(),
+        getServicesByCategoryUsecase: context
+            .read<GetServicesByCategoryUsecase>(),
+        searchServicesUsecase: context.read<SearchServicesUsecase>(),
+        getPriorityServicesUsecase: context.read<GetPriorityServicesUsecase>(),
+        getServiceByIdUsecase: context.read<GetServiceByIdUsecase>(),
+      ),
+      update: (_, a, b, c, d, e, provider) => provider!,
     ),
   ];
 }

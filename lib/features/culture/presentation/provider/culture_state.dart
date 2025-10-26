@@ -1,4 +1,4 @@
-import 'package:boole_apps/features/culture/domain/entities/culture_entity.dart';
+import 'package:boole_apps/features/culture/domain/entities/culture_entities/culture_entity.dart';
 
 enum CultureStatus { initial, loading, success, error }
 
@@ -17,7 +17,11 @@ class CultureState {
   bool get isSuccess => status == CultureStatus.success;
   bool get isError => status == CultureStatus.error;
 
-  CultureState copyWith({CultureStatus? status, String? message, Culture? culture}) {
+  CultureState copyWith({
+    CultureStatus? status,
+    String? message,
+    Culture? culture,
+  }) {
     return CultureState(
       status: status ?? this.status,
       message: message ?? this.message,

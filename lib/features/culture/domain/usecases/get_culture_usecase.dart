@@ -1,4 +1,4 @@
-import 'package:boole_apps/features/culture/domain/entities/culture_entity.dart';
+import 'package:boole_apps/features/culture/domain/entities/culture_entities/culture_entity.dart';
 import 'package:boole_apps/features/culture/domain/repositories/culture_repository.dart';
 
 class GetCultureUsecase {

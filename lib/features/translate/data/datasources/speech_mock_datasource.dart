@@ -4,7 +4,6 @@ class SpeechMockDatasource {
   Future<void> speakText(String text, String language) async {
     // Simulate text-to-speech delay
     await Future.delayed(const Duration(seconds: 2));
-    print('Speaking: $text in $language');
   }
 
   Future<String> speechToText(String language) async {
@@ -15,7 +14,7 @@ class SpeechMockDatasource {
     } else if (language == 'id') {
       return 'Halo, apa kabar hari ini?';
     }
-    
+
     return 'Speech recognition not available';
   }
 }
