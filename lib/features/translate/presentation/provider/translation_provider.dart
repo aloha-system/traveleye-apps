@@ -59,8 +59,10 @@ class TranslationProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final recognizedText = await speechToTextUsecase.call(_state.sourceLanguage);
-      
+      final recognizedText = await speechToTextUsecase.call(
+        _state.sourceLanguage,
+      );
+
       if (recognizedText.isNotEmpty) {
         _state = _state.copyWith(
           originalText: recognizedText,
@@ -102,7 +104,7 @@ class TranslationProvider extends ChangeNotifier {
   void swapLanguages() {
     final newSourceLanguage = _state.targetLanguage;
     final newTargetLanguage = _state.sourceLanguage;
-    
+
     _state = _state.copyWith(
       sourceLanguage: newSourceLanguage,
       targetLanguage: newTargetLanguage,

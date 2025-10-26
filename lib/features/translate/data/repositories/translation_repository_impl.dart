@@ -19,7 +19,7 @@ class TranslationRepositoryImpl implements TranslationRepository {
   @override
   Future<String> translateText(String text, String from, String to) async {
     final translatedText = await remoteDatasource.translateText(text, from, to);
-    
+
     // Save to history
     final translation = TranslationModel(
       originalText: text,
@@ -29,7 +29,7 @@ class TranslationRepositoryImpl implements TranslationRepository {
       timestamp: DateTime.now(),
     );
     await localDatasource.saveTranslation(translation);
-    
+
     return translatedText;
   }
 

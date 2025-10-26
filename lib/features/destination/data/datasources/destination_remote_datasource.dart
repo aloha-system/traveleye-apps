@@ -5,10 +5,7 @@ class DestinationRemoteDatasource {
   final String baseUrl;
   final String apiKey;
 
-  DestinationRemoteDatasource({
-    required this.baseUrl,
-    required this.apiKey,
-  });
+  DestinationRemoteDatasource({required this.baseUrl, required this.apiKey});
 
   Future<List<Map<String, dynamic>>> searchRaw({
     required String keyword,

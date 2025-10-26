@@ -1,4 +1,4 @@
-import 'package:boole_apps/features/culture/domain/entities/social_etiquette_entity.dart';
+import 'package:boole_apps/features/culture/domain/entities/culture_entities/social_etiquette_entity.dart';
 
 class SocialEtiquetteModel extends SocialEtiquette {
   SocialEtiquetteModel({required super.family, required super.greetings});

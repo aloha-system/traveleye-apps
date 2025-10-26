@@ -62,7 +62,7 @@ class _TranslatePageState extends State<TranslatePage> {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             _syncControllerWithProvider(provider);
           });
-          
+
           return SingleChildScrollView(
             padding: const EdgeInsets.all(16),
             child: Column(
@@ -89,7 +89,10 @@ class _TranslatePageState extends State<TranslatePage> {
     );
   }
 
-  Widget _buildLanguageSelector(BuildContext context, TranslationProvider provider) {
+  Widget _buildLanguageSelector(
+    BuildContext context,
+    TranslationProvider provider,
+  ) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -141,7 +144,9 @@ class _TranslatePageState extends State<TranslatePage> {
           border: Border.all(
             color: isSelected
                 ? Theme.of(context).colorScheme.primary
-                : Theme.of(context).colorScheme.outline.withOpacity(0.3),
+                : Theme.of(
+                    context,
+                  ).colorScheme.outline.withAlpha((0.3 * 255).round()),
           ),
         ),
         child: Column(
@@ -160,8 +165,10 @@ class _TranslatePageState extends State<TranslatePage> {
               code.toUpperCase(),
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 color: isSelected
-                    ? Colors.white.withOpacity(0.8)
-                    : Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                    ? Colors.white.withAlpha((0.8 * 255).round())
+                    : Theme.of(
+                        context,
+                      ).colorScheme.onSurface.withAlpha((0.6 * 255).round()),
               ),
             ),
           ],
@@ -170,15 +177,18 @@ class _TranslatePageState extends State<TranslatePage> {
     );
   }
 
-  Widget _buildInputSection(BuildContext context, TranslationProvider provider) {
+  Widget _buildInputSection(
+    BuildContext context,
+    TranslationProvider provider,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           _getLanguageName(provider.state.sourceLanguage),
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 8),
         Container(
@@ -186,7 +196,9 @@ class _TranslatePageState extends State<TranslatePage> {
             color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
+              color: Theme.of(
+                context,
+              ).colorScheme.outline.withAlpha((0.2 * 255).round()),
             ),
           ),
           child: TextField(
@@ -211,7 +223,9 @@ class _TranslatePageState extends State<TranslatePage> {
                         Icons.mic,
                         color: provider.state.isListening
                             ? Theme.of(context).colorScheme.primary
-                            : Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                            : Theme.of(context).colorScheme.onSurface.withAlpha(
+                                (0.6 * 255).round(),
+                              ),
                       ),
                       onPressed: provider.state.isListening
                           ? null
@@ -247,15 +261,18 @@ class _TranslatePageState extends State<TranslatePage> {
     );
   }
 
-  Widget _buildOutputSection(BuildContext context, TranslationProvider provider) {
+  Widget _buildOutputSection(
+    BuildContext context,
+    TranslationProvider provider,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           _getLanguageName(provider.state.targetLanguage),
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 8),
         Container(
@@ -265,20 +282,22 @@ class _TranslatePageState extends State<TranslatePage> {
             color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
+              color: Theme.of(
+                context,
+              ).colorScheme.outline.withAlpha((0.2 * 255).round()),
             ),
           ),
           child: provider.state.isLoading
-              ? const Center(
-                  child: CircularProgressIndicator(),
-                )
+              ? const Center(child: CircularProgressIndicator())
               : Text(
                   provider.state.translatedText.isEmpty
                       ? _getOutputHint(provider.state.targetLanguage)
                       : provider.state.translatedText,
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     color: provider.state.translatedText.isEmpty
-                        ? Theme.of(context).colorScheme.onSurface.withOpacity(0.5)
+                        ? Theme.of(
+                            context,
+                          ).colorScheme.onSurface.withAlpha((0.5 * 255).round())
                         : Theme.of(context).colorScheme.onSurface,
                   ),
                 ),
@@ -287,7 +306,10 @@ class _TranslatePageState extends State<TranslatePage> {
     );
   }
 
-  Widget _buildActionButtons(BuildContext context, TranslationProvider provider) {
+  Widget _buildActionButtons(
+    BuildContext context,
+    TranslationProvider provider,
+  ) {
     return Row(
       children: [
         Expanded(
@@ -295,9 +317,9 @@ class _TranslatePageState extends State<TranslatePage> {
             onPressed: provider.state.translatedText.isEmpty
                 ? null
                 : () => provider.speakText(
-                      provider.state.translatedText,
-                      provider.state.targetLanguage,
-                    ),
+                    provider.state.translatedText,
+                    provider.state.targetLanguage,
+                  ),
             icon: provider.state.isSpeaking
                 ? const SizedBox(
                     width: 16,
@@ -316,7 +338,9 @@ class _TranslatePageState extends State<TranslatePage> {
         const SizedBox(width: 16),
         Expanded(
           child: OutlinedButton.icon(
-            onPressed: provider.state.originalText.isEmpty && provider.state.translatedText.isEmpty
+            onPressed:
+                provider.state.originalText.isEmpty &&
+                    provider.state.translatedText.isEmpty
                 ? null
                 : () {
                     provider.clearText();
@@ -338,18 +362,19 @@ class _TranslatePageState extends State<TranslatePage> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.errorContainer.withOpacity(0.1),
+        color: Theme.of(
+          context,
+        ).colorScheme.errorContainer.withAlpha((0.1 * 255).round()),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: Theme.of(context).colorScheme.error.withOpacity(0.3),
+          color: Theme.of(
+            context,
+          ).colorScheme.error.withAlpha((0.3 * 255).round()),
         ),
       ),
       child: Row(
         children: [
-          Icon(
-            Icons.error_outline,
-            color: Theme.of(context).colorScheme.error,
-          ),
+          Icon(Icons.error_outline, color: Theme.of(context).colorScheme.error),
           const SizedBox(width: 12),
           Expanded(
             child: Text(

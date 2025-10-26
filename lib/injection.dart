@@ -1,8 +1,23 @@
+// ==== Feature Emergency ====
+import 'package:boole_apps/features/culture/domain/usecases/search_culture_usecase.dart';
+import 'package:boole_apps/features/emergency/data/datasources/e_services_remote_datasource.dart';
+import 'package:boole_apps/features/emergency/data/repositories/emergency_services_repsitory_impl.dart';
+import 'package:boole_apps/features/emergency/domain/repositories/emergency_repository.dart';
+import 'package:boole_apps/features/emergency/domain/usecases/get_all_services_usecase.dart';
+import 'package:boole_apps/features/emergency/domain/usecases/get_priority_services_usecase.dart';
+import 'package:boole_apps/features/emergency/domain/usecases/get_service_by_id_usecase.dart';
+import 'package:boole_apps/features/emergency/domain/usecases/get_services_by_category_usecase.dart';
+import 'package:boole_apps/features/emergency/domain/usecases/search_services_usecase.dart';
+import 'package:boole_apps/features/emergency/presentation/provider/emergency_provider.dart';
+import 'package:http/http.dart' as http;
+
+// ==== Feature Culture ====
 import 'package:boole_apps/env/env.dart';
 import 'package:boole_apps/features/auth/domain/usecases/check_auth_status_usecase.dart';
 import 'package:boole_apps/features/culture/data/datasource/culture_remote_datasource.dart';
 import 'package:boole_apps/features/culture/data/repositories/culture_repository_imp.dart';
 import 'package:boole_apps/features/culture/domain/repositories/culture_repository.dart';
+import 'package:boole_apps/features/culture/domain/usecases/get_culture_by_id_usecase.dart';
 import 'package:boole_apps/features/culture/domain/usecases/get_culture_usecase.dart';
 import 'package:boole_apps/features/culture/presentation/provider/culture_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
@@ -56,10 +71,11 @@ class AppInjection {
   // Supabase REST constants (sementara hardcoded, nanti bisa diganti ke .env)
   static const String _supabaseDestinationsEndpoint =
       'https://fowfuytbmgxpeogsaiwk.supabase.co/rest/v1/destinations';
-  static const String _supabaseAnonKey =
-      Env.supabaseApiKey;
+  static const String _supabaseAnonKey = Env.supabaseApiKey;
   static const String _supabaseCultureEndpoint =
       'https://fowfuytbmgxpeogsaiwk.supabase.co/rest/v1/culture';
+  static const String _supabaseEmergencyEndpoint =
+      'https://fowfuytbmgxpeogsaiwk.supabase.co/rest/v1';
 
   static List<SingleChildWidget> providers() => [
     // ==============================
@@ -232,10 +248,33 @@ class AppInjection {
       update: (_, repository, __) => GetCultureUsecase(repository),
     ),
 
-    ChangeNotifierProxyProvider<GetCultureUsecase, CultureProvider>(
-      create: (context) =>
-          CultureProvider(getCultureUsecase: context.read<GetCultureUsecase>()),
-      update: (_, useCase, provider) => provider!,
+    ProxyProvider<CultureRepository, GetCultureByIdUsecase>(
+      update: (_, repository, __) => GetCultureByIdUsecase(repository),
+    ),
+
+    ProxyProvider<CultureRepository, SearchCultureUsecase>(
+      update: (_, repository, __) => SearchCultureUsecase(repository),
+    ),
+
+    ChangeNotifierProxyProvider3<
+      GetCultureUsecase,
+      GetCultureByIdUsecase,
+      SearchCultureUsecase,
+      CultureProvider
+    >(
+      create: (context) => CultureProvider(
+        getCultureUsecase: context.read<GetCultureUsecase>(),
+        getCultureByIdUsecase: context.read<GetCultureByIdUsecase>(),
+        searchCultureUsecase: context.read<SearchCultureUsecase>(),
+      ),
+      update:
+          (
+            _,
+            getCultureUsecase,
+            getCultureByIdUsecase,
+            searchCultureUsecase,
+            provider,
+          ) => provider!,
     ),
 
     // ==============================
@@ -249,6 +288,64 @@ class AppInjection {
     ),
     ProxyProvider<DirectionsRepository, GetRouteUsecase>(
       update: (_, repo, __) => GetRouteUsecase(repo),
+    ),
+
+    // ==============================
+    // EMERGENCY NUMBERS CHAIN
+    // ==============================
+
+    // HTTP Client (shared)
+    Provider<http.Client>(create: (_) => http.Client()),
+
+    // Datasource
+    Provider<EmergencyRemoteDatasource>(
+      create: (context) => EmergencyRemoteDatasourceImpl(
+        baseUrl: _supabaseEmergencyEndpoint,
+        apiKey: _supabaseAnonKey,
+        client: context.read<http.Client>(),
+      ),
+    ),
+
+    // Repository
+    ProxyProvider<EmergencyRemoteDatasource, EmergencyRepository>(
+      update: (_, datasource, __) => EmergencyRepositoryImpl(datasource),
+    ),
+
+    // Usecases
+    ProxyProvider<EmergencyRepository, GetAllServicesUsecase>(
+      update: (_, repository, __) => GetAllServicesUsecase(repository),
+    ),
+    ProxyProvider<EmergencyRepository, GetServicesByCategoryUsecase>(
+      update: (_, repository, __) => GetServicesByCategoryUsecase(repository),
+    ),
+    ProxyProvider<EmergencyRepository, SearchServicesUsecase>(
+      update: (_, repository, __) => SearchServicesUsecase(repository),
+    ),
+    ProxyProvider<EmergencyRepository, GetPriorityServicesUsecase>(
+      update: (_, repository, __) => GetPriorityServicesUsecase(repository),
+    ),
+    ProxyProvider<EmergencyRepository, GetServiceByIdUsecase>(
+      update: (_, repository, __) => GetServiceByIdUsecase(repository),
+    ),
+
+    // Provider
+    ChangeNotifierProxyProvider5<
+      GetAllServicesUsecase,
+      GetServicesByCategoryUsecase,
+      SearchServicesUsecase,
+      GetPriorityServicesUsecase,
+      GetServiceByIdUsecase,
+      EmergencyProvider
+    >(
+      create: (context) => EmergencyProvider(
+        getAllServicesUsecase: context.read<GetAllServicesUsecase>(),
+        getServicesByCategoryUsecase: context
+            .read<GetServicesByCategoryUsecase>(),
+        searchServicesUsecase: context.read<SearchServicesUsecase>(),
+        getPriorityServicesUsecase: context.read<GetPriorityServicesUsecase>(),
+        getServiceByIdUsecase: context.read<GetServiceByIdUsecase>(),
+      ),
+      update: (_, a, b, c, d, e, provider) => provider!,
     ),
   ];
 }

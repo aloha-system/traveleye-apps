@@ -1,4 +1,4 @@
-import 'package:boole_apps/features/culture/domain/entities/common_entity.dart';
+import 'package:boole_apps/features/culture/domain/entities/culture_entities/common_entity.dart';
 
 class GreetingPhrases {
   List<Common> common;

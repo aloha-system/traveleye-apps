@@ -2,11 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class SocalCard extends StatelessWidget {
-  const SocalCard({
-    super.key,
-    this.icon,
-    this.press,
-  });
+  const SocalCard({super.key, this.icon, this.press});
 
   final String? icon;
   final Function? press;
