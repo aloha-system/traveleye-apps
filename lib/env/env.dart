@@ -15,4 +15,7 @@ final class Env {
 
   @EnviedField(varName: 'GOOGLE_MAPS_API_KEY')
   static const String googleMapsApiKey = _Env.googleMapsApiKey;
+
+  @EnviedField(varName: 'GEMINI_CULTURE_API_KEY')
+  static const String geminiCultureApiKey = _Env.geminiCultureApiKey;
 }
