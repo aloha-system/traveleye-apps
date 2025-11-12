@@ -70,12 +70,7 @@ Rules:
       final jsonString = text.substring(jsonStart, jsonEnd + 1);
       final jsonData = jsonDecode(jsonString);
 
-      final culturalInsightJson = jsonData['destination'];
-      if (culturalInsightJson == null) {
-        throw Exception('Insight data not found in Gemini response');
-      }
-
-      return CulturalInsight.fromJson(culturalInsightJson);
+      return CulturalInsight.fromJson(jsonData);
     } catch (e) {
       throw Exception('Failed to fetch insight from Gemini: $e');
     }
