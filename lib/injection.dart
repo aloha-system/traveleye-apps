@@ -1,5 +1,9 @@
 // ==== Feature Emergency ====
+import 'package:boole_apps/core/data/datasources/gemini_remote_datasource.dart';
 import 'package:boole_apps/features/culture/domain/usecases/search_culture_usecase.dart';
+import 'package:boole_apps/features/destination/data/repositories/gen_culture_repository_impl.dart';
+import 'package:boole_apps/features/destination/domain/repositories/gen_culture_repository.dart';
+import 'package:boole_apps/features/destination/domain/usecases/gen_culture_usecase.dart';
 import 'package:boole_apps/features/emergency/data/datasources/e_services_remote_datasource.dart';
 import 'package:boole_apps/features/emergency/data/repositories/emergency_services_repsitory_impl.dart';
 import 'package:boole_apps/features/emergency/domain/repositories/emergency_repository.dart';
@@ -9,6 +13,7 @@ import 'package:boole_apps/features/emergency/domain/usecases/get_service_by_id_
 import 'package:boole_apps/features/emergency/domain/usecases/get_services_by_category_usecase.dart';
 import 'package:boole_apps/features/emergency/domain/usecases/search_services_usecase.dart';
 import 'package:boole_apps/features/emergency/presentation/provider/emergency_provider.dart';
+import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:http/http.dart' as http;
 
 // ==== Feature Culture ====
@@ -79,7 +84,30 @@ class AppInjection {
   static const String _supabaseEmergencyEndpoint =
       'https://fowfuytbmgxpeogsaiwk.supabase.co/rest/v1';
 
+  static final GenerativeModel _cultureGenModel = GenerativeModel(
+    model: Env.geminiCultureModel,
+    apiKey: Env.geminiCultureApiKey,
+  );
+
+  static final GenerativeModel _defaultModel = GenerativeModel(
+    model: Env.geminiCultureModel,
+    apiKey: Env.geminiCultureApiKey,
+  );
+
   static List<SingleChildWidget> providers() => [
+    // ==============================
+    // GENERATIVE CULTURE (GEMINI) CHAIN
+    // ==============================
+    Provider<GeminiRemoteDataSource>(
+      create: (_) => GeminiRemoteDataSourceImpl(_cultureGenModel),
+    ),
+    ProxyProvider<GeminiRemoteDataSource, GenCultureRepository>(
+      update: (_, remote, __) => GenCultureRepositoryImpl(remote),
+    ),
+    ProxyProvider<GenCultureRepository, GenCultureUsecase>(
+      update: (_, repo, __) => GenCultureUsecase(repo),
+    ),
+
     // ==============================
     // AUTH CHAIN
     // ==============================

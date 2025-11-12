@@ -18,4 +18,7 @@ final class Env {
 
   @EnviedField(varName: 'GEMINI_CULTURE_API_KEY')
   static const String geminiCultureApiKey = _Env.geminiCultureApiKey;
+
+  @EnviedField(varName: 'GEMINI_CULTURE_MODEL')
+  static const String geminiCultureModel = _Env.geminiCultureModel;
 }

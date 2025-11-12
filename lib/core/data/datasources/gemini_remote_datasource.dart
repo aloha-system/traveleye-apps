@@ -8,13 +8,12 @@ abstract class GeminiRemoteDataSource {
 
 class GeminiRemoteDataSourceImpl implements GeminiRemoteDataSource {
   final GenerativeModel _model;
-  final GenerativeModel _cultureModel;
 
-  GeminiRemoteDataSourceImpl(this._model, this._cultureModel);
+  GeminiRemoteDataSourceImpl(this._model);
 
   @override
   Future<GenerateContentResponse> generateCulture(String prompt) async {
-    final response = await _cultureModel.generateContent([
+    final response = await _model.generateContent([
       Content.text(prompt),
     ]);
     return response;
