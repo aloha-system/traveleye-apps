@@ -88,12 +88,7 @@ class AppInjection {
     model: Env.geminiCultureModel,
     apiKey: Env.geminiCultureApiKey,
   );
-
-  static final GenerativeModel _defaultModel = GenerativeModel(
-    model: Env.geminiCultureModel,
-    apiKey: Env.geminiCultureApiKey,
-  );
-
+  
   static List<SingleChildWidget> providers() => [
     // ==============================
     // GENERATIVE CULTURE (GEMINI) CHAIN
